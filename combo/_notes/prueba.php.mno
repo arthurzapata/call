@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_mos_curso" value="name:cur_id;datatype:int,name:cur_nombre;datatype:string,name:cur_activo;datatype:int,name:cur_descripcion;datatype:blob,name:cur_remitente;datatype:string,name:cur_asunto;datatype:string" />
+</info>

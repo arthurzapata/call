@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Documento sin título</title>
+        <script src="demo/libs/jquery.min.js"></script>
+        <script src="demo/libs/bootstrap.min.js"></script>
+        <script src="demo/libs/pretty.js"></script>
+        
+        <!-- BOOTSTRAP-FULLSCREEN-SELECT files -->
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-fullscreen-select.css" />
+        <script type="text/javascript" src="js/bootstrap-fullscreen-select.js"></script>
+        <!--END BOOTSTRAP-FULLSCREEN-SELECT files-->
+</head>
+
+<body>
+
+                            <select class="form-control mobileSelect" multiple>
+                                <option value="pizza">Pizza</option>
+                                <option value="burger">Burger</option>
+                                <option value="tacos">Tacos</option>   
+                            </select>
+
+        <script type="text/javascript">
+            $(function () {
+                $('.mobileSelect').mobileSelect();
+            });
+        </script>
+               
+</body>
+</html>

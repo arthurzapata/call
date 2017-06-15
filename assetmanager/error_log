@@ -1,0 +1,28 @@
+[01-Sep-2011 02:52:20] PHP Warning:  opendir(D:/websites/webmanto/tempo7.praxisinteractive.net/web/fortaleza2010/fotos) [<a href='function.opendir'>function.opendir</a>]: failed to open dir: No such file or directory in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 140
+[01-Sep-2011 02:52:20] PHP Warning:  readdir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 142
+[01-Sep-2011 02:52:20] PHP Warning:  closedir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 178
+[01-Sep-2011 02:52:20] PHP Warning:  opendir(D:/websites/webmanto/tempo7.praxisinteractive.net/web/fortaleza2010/fotos) [<a href='function.opendir'>function.opendir</a>]: failed to open dir: No such file or directory in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 217
+[01-Sep-2011 02:52:20] PHP Warning:  readdir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 218
+[01-Sep-2011 02:52:20] PHP Warning:  sort() expects parameter 1 to be array, null given in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 222
+[01-Sep-2011 02:52:20] PHP Warning:  closedir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 355
+[01-Sep-2011 12:15:10] PHP Warning:  opendir(D:/websites/webmanto/tempo7.praxisinteractive.net/web/fortaleza2010/fotos) [<a href='function.opendir'>function.opendir</a>]: failed to open dir: No such file or directory in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 140
+[01-Sep-2011 12:15:10] PHP Warning:  readdir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 142
+[01-Sep-2011 12:15:10] PHP Warning:  closedir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 178
+[01-Sep-2011 12:15:10] PHP Warning:  opendir(D:/websites/webmanto/tempo7.praxisinteractive.net/web/fortaleza2010/fotos) [<a href='function.opendir'>function.opendir</a>]: failed to open dir: No such file or directory in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 217
+[01-Sep-2011 12:15:10] PHP Warning:  readdir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 218
+[01-Sep-2011 12:15:10] PHP Warning:  sort() expects parameter 1 to be array, null given in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 222
+[01-Sep-2011 12:15:10] PHP Warning:  closedir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 355
+[01-Sep-2011 12:16:37] PHP Warning:  opendir(D:/websites/webmanto/tempo7.praxisinteractive.net/web/fortaleza2010/fotos) [<a href='function.opendir'>function.opendir</a>]: failed to open dir: No such file or directory in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 140
+[01-Sep-2011 12:16:37] PHP Warning:  readdir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 142
+[01-Sep-2011 12:16:37] PHP Warning:  closedir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 178
+[01-Sep-2011 12:16:37] PHP Warning:  opendir(D:/websites/webmanto/tempo7.praxisinteractive.net/web/fortaleza2010/fotos) [<a href='function.opendir'>function.opendir</a>]: failed to open dir: No such file or directory in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 217
+[01-Sep-2011 12:16:37] PHP Warning:  readdir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 218
+[01-Sep-2011 12:16:37] PHP Warning:  sort() expects parameter 1 to be array, null given in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 222
+[01-Sep-2011 12:16:37] PHP Warning:  closedir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 355
+[01-Sep-2011 12:16:50] PHP Warning:  opendir(D:/websites/webmanto/tempo7.praxisinteractive.net/web/fortaleza2010/fotos) [<a href='function.opendir'>function.opendir</a>]: failed to open dir: No such file or directory in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 140
+[01-Sep-2011 12:16:50] PHP Warning:  readdir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 142
+[01-Sep-2011 12:16:50] PHP Warning:  closedir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 178
+[01-Sep-2011 12:16:50] PHP Warning:  opendir(D:/websites/webmanto/tempo7.praxisinteractive.net/web/fortaleza2010/fotos) [<a href='function.opendir'>function.opendir</a>]: failed to open dir: No such file or directory in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 217
+[01-Sep-2011 12:16:50] PHP Warning:  readdir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 218
+[01-Sep-2011 12:16:50] PHP Warning:  sort() expects parameter 1 to be array, null given in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 222
+[01-Sep-2011 12:16:50] PHP Warning:  closedir(): supplied argument is not a valid Directory resource in /home/pepa/public_html/adm/assetmanager/assetmanager.php on line 355
