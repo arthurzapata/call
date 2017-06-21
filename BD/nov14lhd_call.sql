@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-06-2017 a las 03:17:50
+-- Tiempo de generación: 21-06-2017 a las 22:19:26
 -- Versión del servidor: 5.6.21
 -- Versión de PHP: 5.6.3
 
@@ -148,16 +148,17 @@ CREATE TABLE IF NOT EXISTS `call_pedido` (
   `cc_vendedor` int(11) NOT NULL,
   `total` decimal(18,2) NOT NULL,
   `fecha_reg` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `fecha_ped` datetime NOT NULL
+  `fecha_ped` datetime NOT NULL,
+  `requerimiento` text COLLATE utf8_spanish_ci
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `call_pedido`
 --
 
-INSERT INTO `call_pedido` (`nro_pedido`, `cli_id`, `ped_estado`, `cc_vendedor`, `total`, `fecha_reg`, `fecha_ped`) VALUES
-(1, 1, 1, 1, '1000.00', '2017-06-15 14:19:27', '2017-06-15 00:00:00'),
-(2, 1, 1, 1, '50.00', '2017-06-15 14:19:27', '2017-06-08 00:00:00');
+INSERT INTO `call_pedido` (`nro_pedido`, `cli_id`, `ped_estado`, `cc_vendedor`, `total`, `fecha_reg`, `fecha_ped`, `requerimiento`) VALUES
+(1, 1, 1, 1, '1000.00', '2017-06-15 14:19:27', '2017-06-15 00:00:00', NULL),
+(2, 1, 1, 1, '50.00', '2017-06-15 14:19:27', '2017-06-08 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -303,7 +304,7 @@ INSERT INTO `call_usuario` (`usu_id`, `per_id`, `usu_nombre`, `usu_clave`, `usu_
 
 CREATE TABLE IF NOT EXISTS `call_visitas` (
 `vis_id` int(11) NOT NULL,
-  `vis_fecha` datetime NOT NULL,
+  `vis_fecha` date NOT NULL,
   `vis_lugar` varchar(80) COLLATE utf8_spanish_ci NOT NULL,
   `vis_cli` int(11) NOT NULL,
   `vis_tipovisita` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
@@ -312,17 +313,18 @@ CREATE TABLE IF NOT EXISTS `call_visitas` (
   `usu_id` int(11) NOT NULL,
   `fecha_reg` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `motivo` text COLLATE utf8_spanish_ci NOT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `call_visitas`
 --
 
 INSERT INTO `call_visitas` (`vis_id`, `vis_fecha`, `vis_lugar`, `vis_cli`, `vis_tipovisita`, `hora_ini`, `hora_fin`, `usu_id`, `fecha_reg`, `motivo`) VALUES
-(1, '2017-05-01 23:18:32', 'LOS OLIVOS', 0, 'OFICINA', '00:00:00', '00:00:00', 5, '0000-00-00 00:00:00', ''),
-(2, '2017-05-01 23:18:32', 'LOS OLIVOS', 0, 'OFICINA', '00:00:00', '00:00:00', 5, '0000-00-00 00:00:00', ''),
-(3, '0000-00-00 00:00:00', 'san isidro', 1, 'opoerador', '12:00:00', '15:00:00', 1, '2017-06-04 03:12:17', 'kkkkkkkkkkk'),
-(4, '2017-06-07 00:00:00', 'san isidro', 2, 'opoerador', '12:00:00', '15:00:00', 1, '2017-06-12 00:04:56', '');
+(1, '2017-06-01', 'LOS OLIVOS', 1, 'OFICINA', '00:00:00', '00:00:00', 14, '2017-06-21 05:21:15', ''),
+(2, '2017-06-01', 'LOS OLIVOS', 1, 'OFICINA', '00:00:00', '00:00:00', 14, '2017-06-21 05:25:25', ''),
+(3, '2017-06-02', 'san isidro', 4, 'opoerador', '12:00:00', '15:00:00', 16, '2017-06-21 05:21:49', 'kkkkkkkkkkk'),
+(4, '2017-06-02', 'san isidro', 2, 'opoerador', '12:00:00', '15:00:00', 14, '2017-06-21 05:22:00', ''),
+(8, '2017-06-05', 'MIRAFLORES JR JOSE PARDO', 2, 'LOCAL', '15:00:00', '16:00:00', 1, '2017-06-21 19:23:53', 'ddddddddddddddd');
 
 -- --------------------------------------------------------
 
@@ -338,14 +340,15 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `telefono` varchar(11) COLLATE utf8_spanish_ci DEFAULT NULL,
   `email` varchar(60) COLLATE utf8_spanish_ci DEFAULT NULL,
   `fecha_reg` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `cliente`
 --
 
 INSERT INTO `cliente` (`cli_id`, `nro_doc`, `razon_social`, `direccion`, `telefono`, `email`, `fecha_reg`) VALUES
-(1, '10468645381', 'ARTURO ZAPATA CARRETERO', 'JR. SAN GABINO 2323 SURCO', '943054727', 'azapata@promelsa.com.pe', '2017-06-12 04:36:46');
+(1, '10468645381', 'ARTURO ZAPATA CARRETERO', 'JR. SAN GABINO 2323 SURCO', '943054727', 'azapata@promelsa.com.pe', '2017-06-12 04:36:46'),
+(2, '78565412', 'INGRID VALDERRAMA ALFARO', 'JR SAN GABINO MIRAFLORES', '985655555', 'ingrdivalderrama@gmail.com', '2017-06-21 19:21:35');
 
 -- --------------------------------------------------------
 
@@ -590,12 +593,12 @@ MODIFY `usu_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
 -- AUTO_INCREMENT de la tabla `call_visitas`
 --
 ALTER TABLE `call_visitas`
-MODIFY `vis_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+MODIFY `vis_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-MODIFY `cli_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `cli_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
