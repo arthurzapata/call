@@ -93,7 +93,10 @@
                                             <a href="rpt_ventas.php"><i class="fa fa-retweet bg-orange"></i> Ventas </a>
                                         </li>
                                         <li>
-                                            <a href="#.php"><i class="fa fa-comment bg-blue"></i> Indicador Producción</a>
+                                            <a href="rpt_produccion.php"><i class="fa fa-comment bg-blue"></i> Indicador Producción</a>
+                                        </li>
+                                          <li>
+                                            <a href="rpt_crecimiento.php"><i class="fa fa-retweet bg-success"></i> Indicador Crecimiento</a>
                                         </li>
                                     </ul>
                              </div>

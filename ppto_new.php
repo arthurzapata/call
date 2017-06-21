@@ -140,6 +140,16 @@ $query_mos_estado = "SELECT e.est_id,  r.emp_id,  COUNT(r.est_id) AS cant,  e.es
 $mos_estado = mysql_query($query_mos_estado, $conexion) or die(mysql_error());
 $row_mos_estado = mysql_fetch_assoc($mos_estado);
 
+//vendedores
+mysql_select_db($database_conexion, $conexion);
+if ($perid == 2)//admin
+  $query_lista_user = "SELECT usu_id, usu_nombre FROM call_usuario where usu_id=".$usuid."  and usu_activo=1";
+else 
+  $query_lista_user = "SELECT usu_id, usu_nombre FROM call_usuario where per_id in (2) and usu_activo=1";
+$lista_user = mysql_query($query_lista_user, $conexion) or die(mysql_error());
+$row_lista_user = mysql_fetch_assoc($lista_user);
+$totalRows_lista_user = mysql_num_rows($lista_user);
+//
 $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
@@ -370,7 +380,18 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                           <input type="text" id="fecha" name="fecha" value="" class="form-control" required>
                         </div>
 						<div class="form-group">Vendedor :
-                          <input type="text" id="usu_id" name="usu_id" value="" class="form-control" required>
+                          <!--<input type="text" id="usu_id" name="usu_id" value="" class="form-control" required>-->
+                  <select name="usu_id" id="usu_id" class="form-control">
+                      <?php
+                      echo '<option value="0">-- Seleccione --</option>';           
+                      do
+                            { 
+                                echo '<option value="'.$row_lista_user['usu_id'].'">'.$row_lista_user['usu_nombre'].'</option>';
+                            } while ($row_lista_user = mysql_fetch_assoc($lista_user));              
+                            ?>
+                    </select>
+
+
                         </div>	                       
 						<div class="form-group">Monto :
                           <input type="text" id="monto" name="monto" value="" class="form-control" required>
@@ -472,6 +493,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
       $(function() {
         $( "#fecha" ).datepicker({
           defaultDate: "",
+		  changeYear: true,
           changeMonth: true, 
           numberOfMonths: 1,dateFormat: "dd-mm-yy",
           dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
