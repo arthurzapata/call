@@ -125,14 +125,13 @@ $to = ''; //hasta
 
 $maxRows_mos_curso = 15;
 $pageNum_mos_curso = 0;
-/*if (isset($_GET['pageNum_mos_curso'])) {
+if (isset($_GET['pageNum_mos_curso'])) {
   $pageNum_mos_curso = $_GET['pageNum_mos_curso'];
 }
 $startRow_mos_curso = $pageNum_mos_curso * $maxRows_mos_curso;
 
 mysql_select_db($database_conexion, $conexion);
-$query_mos_curso = "SELECT cn_serie,cn_numero,tipo_doc,nro_pedido,c.nro_doc,c.razon_social,cc_vta,cc_moneda,d.fecha_reg,u.usu_nombre, total FROM documento d left join cliente c on d.cc_cliente =c.cli_id 
-left join call_usuario u on d.cc_vendedor = u.usu_id order by d.fecha_reg desc";
+$query_mos_curso = "SELECT fecha,p.usu_id,u.usu_nombre,monto from ppto p inner join call_usuario u on p.usu_id = u.usu_id order by fecha_reg desc";
 $query_limit_mos_curso = sprintf("%s LIMIT %d, %d", $query_mos_curso, $startRow_mos_curso, $maxRows_mos_curso);
 $mos_curso = mysql_query($query_limit_mos_curso, $conexion) or die(mysql_error());
 $row_mos_curso = mysql_fetch_assoc($mos_curso);
@@ -144,128 +143,21 @@ if (isset($_GET['totalRows_mos_curso'])) {
   $totalRows_mos_curso = mysql_num_rows($all_mos_curso);
 }
 $totalPages_mos_curso = ceil($totalRows_mos_curso/$maxRows_mos_curso)-1;
-*/
-$item =0;
-$total=0;
-/*
-  $query_mos_curso = "SELECT nro_pedido,p.cli_id,c.nro_doc,c.razon_social,ped_estado,cc_vendedor,u.usu_nombre,total FROM call_pedido p inner join cliente c on p.cli_id = c.cli_id
-	inner join call_usuario u on p.cc_vendedor = u.usu_id where nro_pedido = 9999";
-  $mos_curso = mysql_query($query_mos_curso, $conexion) or die(mysql_error());
-  */
-$query_mos_pd = "SELECT nro_pedido, d.pro_id, p.pro_descripcion, cant, precio, importe FROM call_pedido_det d LEFT JOIN producto p on d.pro_id = p.pro_id
-  where nro_pedido = 9999";
-  $mos_pd = mysql_query($query_mos_pd, $conexion) or die(mysql_error());
-  $row_mos_pd = mysql_fetch_assoc($mos_pd);
-  $totalRows_mos_pd = mysql_num_rows($mos_pd);
 
 if (isset($_POST['buscar'])) {
-  mysql_select_db($database_conexion, $conexion);
-  $query_mos_curso = "SELECT nro_pedido,p.cli_id,c.nro_doc,c.razon_social,ped_estado,cc_vendedor,u.usu_nombre,total FROM call_pedido p inner join cliente c on p.cli_id = c.cli_id
-	inner join call_usuario u on p.cc_vendedor = u.usu_id where nro_pedido = ".$_POST['buscar']."";
+    mysql_select_db($database_conexion, $conexion);
+  $query_mos_curso = "SELECT fecha,p.usu_id,u.usu_nombre,monto from ppto p inner join call_usuario u on p.usu_id = u.usu_id where u.usu_nombre like '%".$_POST['buscar']."%'";
   $mos_curso = mysql_query($query_mos_curso, $conexion) or die(mysql_error());
   $row_mos_curso = mysql_fetch_assoc($mos_curso);
-
-  $query_mos_pd = "SELECT nro_pedido, d.pro_id, p.pro_descripcion, cant, precio, importe FROM call_pedido_det d LEFT JOIN producto p on d.pro_id = p.pro_id
-  where nro_pedido =" .$_POST['buscar']."";
-  $mos_pd = mysql_query($query_mos_pd, $conexion) or die(mysql_error());
-  $row_mos_pd = mysql_fetch_assoc($mos_pd);
-  $totalRows_mos_pd = mysql_num_rows($mos_pd);
 }
-
-
-	$fechaactual = date("Y-m-d");
-//// nuevo pedido
-mysql_select_db($database_conexion, $conexion);
-$query_nro_ped = "SELECT MAX(nro_pedido) + 1 as nroped FROM call_pedido";
-$nro_ped = mysql_query($query_nro_ped, $conexion) or die(mysql_error());
-$row_nro_ped = mysql_fetch_assoc($nro_ped);
-$totalRows_nro_ped = mysql_num_rows($nro_ped);
-	
-if ($row_nro_ped['nroped']== "")	
+// obtenemos msje resultado insertado
+if (isset($_GET['n'])) 
 {
-$idped = 1;}
-else
-{
-$idped = $row_nro_ped['nroped'];}
-/*$sql = "SELECT MAX(id_pedido) + 1 FROM pedido";
-
-$result = mysql_query ($sql);
-if (! $result){
-   echo "La consulta SQL contiene errores.".mysql_error();
-   exit();
-}else {
-   
-    while ($row = mysql_fetch_row($result))
-	{
-       $idped = $row[0];		
-    }
-
- }
-//*/
-/*consulta obtener id _Pedidpo*/
-
-$editFormAction = $_SERVER['PHP_SELF'];
-if (isset($_SERVER['QUERY_STRING'])) {
-  $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
-}
-
-if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form2")) {
-	//actualizamos estado  mesa
-	$updateSQL = sprintf("update mesa set estado = 1 where id_meza = %s",
-                       	GetSQLValueString($_SESSION['mesa'], "int"));
-	mysql_select_db($database_conexion, $conexion);
-	$Resultup = mysql_query($updateSQL, $conexion) or die(mysql_error());
-	//
-	date_default_timezone_set('America/Lima');
-	$fecha = date("Y-m-d");
-	$hora = date("H:i:s");
-	
-	// obtener el cierre
-  	mysql_select_db($database_conexion, $conexion);
-	$query_ultima_apertura = "SELECT * FROM cierre ORDER BY id_cierre DESC LIMIT 1";
-	$ultima_apertura = mysql_query($query_ultima_apertura, $conexion) or die(mysql_error());
-	$row_ultima_apertura = mysql_fetch_assoc($ultima_apertura);
-	$totalRows_ultima_apertura = mysql_num_rows($ultima_apertura);
-  	//
-  	$insertSQL = sprintf("INSERT INTO pedido (id_pedido, id_emp,fecha_ped,id_meza, estado_ped,total,hora_ped,id_cierre) 
-  						VALUES (%s, %s, %s,%s, %s, %s, %s, %s)",
-                       	GetSQLValueString($idped, "int"),
-                       	GetSQLValueString($row_mos_usuario['id_emp'], "int"),
-					   	GetSQLValueString($fecha, "date"),
-						GetSQLValueString($_SESSION['mesa'], "int"),
-						GetSQLValueString(0, "int"),// 0 PEDIDO EN ESPERAAA 1 PEDIDO CANCELADO
-                       	GetSQLValueString($_SESSION['total'], "double"),
-						GetSQLValueString($hora, "text"),
-						GetSQLValueString($row_ultima_apertura['id_cierre'], "int"));
-
-  mysql_select_db($database_conexion, $conexion);
-
-  $Result1 = mysql_query($insertSQL, $conexion) or die(mysql_error());
-
- //detalle
-$producto = isset($_POST['KEY_PROD']) ? $_POST['KEY_PROD'] : NULL;
-for ($i=0;$i<sizeof($producto);$i++){
-/*if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form2")) {*/
-  $query = sprintf("INSERT INTO det_pedido (id_pedido, id_plat,cantidad, importe) VALUES (%s, %s, %s, %s)",
-                       GetSQLValueString($idped, "int"),
-					   GetSQLValueString($producto[$i], "int"),
-					   GetSQLValueString($_POST['cantidad'], "int"),
-					   GetSQLValueString($_POST['importe'], "double"));
- 	mysql_select_db($database_conexion, $conexion);
-  	$Result2 = mysql_query($query, $conexion) or die(mysql_error());
-/*		unset($_SESSION['cart']);
-		unset($_SESSION['items']);
-		unset($_SESSION['total']);
-*/
-	$mensaje = 'Pedido Registrado Correctamente.';
-  	//
-    $insertGoTo = "seleccionar_mesa.php?n=$mensaje";
-  	if (isset($_SERVER['QUERY_STRING'])) {
-    $insertGoTo .= (strpos($insertGoTo, '?')) ? "&" : "?";
-    $insertGoTo .= $_SERVER['QUERY_STRING'];
-  	}
-  	header(sprintf("Location: %s", $insertGoTo));
- 	}  
+  $var = $_GET['n'];
+  $msj = '<div class="alert alert-info alert-dismissable">
+         <i class="fa fa-info"></i>
+     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+             <b>Alerta !</b>'.$var.'!!  </div>';
 }
 ?>
 <!DOCTYPE html>
@@ -410,17 +302,17 @@ for ($i=0;$i<sizeof($producto);$i++){
                 
                 <div class="box box-primary">
                                 
-                  <div class="box-header"> <h3 class="box-title">Nuevo Comprobante </h3></div>
+                  <div class="box-header"> <h3 class="box-title">Ppto por Vendedor </h3></div>
                    
                   <div class="box-body">
                     <div class="row" style="margin-bottom:10px;">
                       <div class="col-sm-6">
-                        <!--  <a class="btn btn-primary" href="documento_new.php"><i class="fa fa-pencil"></i> Agregar</a>-->
+                          <a class="btn btn-primary" href="ppto_new.php"><i class="fa fa-pencil"></i> Agregar</a>
             </div>
                     <div class="col-sm-6 search-form">
                             <form name="formb" id="formb" action="" method="post" class="text-right">
                                   <div class="input-group">                                          
-                                     <input type="text" name="buscar" class="form-control" placeholder="Ingresar N° Pedido ...">
+                                     <input type="text" name="buscar" class="form-control" placeholder="Buscar ...">
                                  <div class="input-group-btn">
                                  <button type="submit" name="q" class="btn btn btn-primary"><i class="fa fa-search"></i></button>
                                  </div>
@@ -428,119 +320,80 @@ for ($i=0;$i<sizeof($producto);$i++){
                         </form>
                         </div>
                    </div>     
-				<form method="post" name="form1" action="<?php echo $editFormAction; ?>">
-                   <div class="box-body table-responsive no-padding">
-					   <div class="row">
-							<div class="col-md-2">
-								<div class="form-group">Tipo Comprobante
-									<select name="tipo_doc" class="form-control">
-                                        <option value="02" selected="">BOLETA</option>
-										<option value="01" selected="">FACTURA</option>
-                                    </select>
-								</div>
-							</div>
-							<div class="col-md-1">Serie
-								<div class="form-group"><input type="text" name="serie" class="form-control" required> </div>
-							</div>
-							<div class="col-md-2">Número
-								<div class="form-group"><input type="text" name="numero" class="form-control"  required> </div>
-							</div>
-							<div class="col-md-2">
-								<div class="form-group">Fecha
-									<div class="input-group">
-										<div class="input-group-addon">
-										  <i class="fa fa-calendar"></i>
-										</div>
-										<input type="text" id="fecha_ped" name="fecha_ped" value="<?php echo $fechaactual;?>" class="form-control" readonly="true" required>
-									</div>
-								</div>
-							</div>
 
-							<div class="col-md-5">
-								<div class="form-group">Cliente
-									<div class="input-group">
-										<div class="input-group-addon">
-										  <i class="fa fa-calendar"></i>
-										</div>
-										<input type="text" id="cliente" name="cliente" value="<?php echo htmlentities(@$row_mos_curso['nro_doc'] . " - " .@$row_mos_curso['razon_social'] , ENT_COMPAT, 'UTF-8'); ?>" class="form-control" required>
-									</div>
-								</div>
-							</div>
-							<input type="hidden" name="cli_id" id="cli_id" value="<?php echo htmlentities($row_mos_curso['cli_id'], ENT_COMPAT, 'UTF-8'); ?>">
-					   </div>
-					   <div class="row">
-							<div class="col-md-1">Cod Vend
-								<div class="form-group"><input type="text" name="codven" class="form-control" value="<?php echo htmlentities(@$row_mos_curso['cc_vendedor'], ENT_COMPAT, 'UTF-8'); ?>" required> </div>
-							</div>
-							<div class="col-md-4">Vendedor
-								<div class="form-group"><input type="text" name="vendor" class="form-control" value="<?php echo htmlentities(@$row_mos_curso['usu_nombre'], ENT_COMPAT, 'UTF-8'); ?>"  required> </div>
-							</div>
-					   </div>
-					   <?php if ($totalRows_mos_pd !== 0) { ?>
-              			  <table class="table table-bordered table-striped table-hover table-condensed tablesorter">
-							<tr>
-							  <td><strong>Item</strong></td>
-							  <td><strong>Código</strong></td>
-							  <td><strong>Producto o Servicio</strong></td>
-							  <td><strong>Cant</strong></td>
-							  <td><strong>Precio</strong></td>
-							  <td><strong>Importe</strong></td>
-							<!--  <td align="center"><strong>Acciones</strong></td>-->
-							</tr>
-							<?php 
-	
-							do {
-							$item++;
-							$total = $total + $row_mos_pd['importe'];
-							?>
-							  <tr>
-								<td><?php echo $item; ?></td>
-								<td><input name="KEY_PROD[]" type="hidden" id="KEY_PROD[]" value="<?php echo $prod[0]['pro_id'];?>"><?php echo $row_mos_pd['pro_id']; ?></td>
-								<td><?php echo $row_mos_pd['pro_descripcion'];?></td>
-								<td><?php echo $row_mos_pd['cant'];?></td>
-								<td align="right"><?php echo $row_mos_pd['precio']; ?></td>
-								<td align="right"><?php echo $row_mos_pd['importe'];?></td>
-								<!--<td><div align="center"><a onclick="return confirm('¿Seguro que desea eliminar?')" href="producto_delete.php?id=<?php echo $row_mos_curso['pro_id']; ?>" title="Eliminar" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Eliminar"><i class="fa fa-trash-o"></i></button></a></div></td>-->
-							  </tr>
-							  <?php } while ($row_mos_pd = mysql_fetch_assoc($mos_pd)); ?>
-							  <tr>
-								<td colspan="5" align="right"><strong>SUB TOTAL</strong></td>
-								<td align="right"><?php echo number_format($total,2);?></td>
-								
-							  </tr>
-							  <tr>
-								<td colspan="5" align="right"><strong>IGV (18%)</strong> </td>
-								<td align="right"><?php 
-								$igv = $total*0.18;
-								echo number_format($igv,2);?></td>
-								
-							  </tr>
-							  <tr>
-								<td colspan="5" align="right"><strong>TOTAL A PAGAR</strong></td>
-								<td align="right"><strong><?php echo number_format($total + $igv,2);?></strong></td>
-							  </tr>
-						  </table>
-						  <?php 
-						  } // Show if recordset empty
-						  else 
-						  { 
-						  echo '<br>';
-						  echo '<div class="alert alert-info alert-dismissable">
-								 <i class="fa fa-info"></i>
-							 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-									 <b>Alerta !</b> Ningun registro encontrado !!
-								</div>';
-						  }
-						   ?>
-					</div>
-					<div class="box-footer">
-							<button type="submit" class="btn btn-primary pull-left"><i class="fa fa-save"></i> Guardar</button>
-							<a href="documentos.php" style="margin-left:10px;"><button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button></a>
-							<input type="hidden" name="MM_insert" value="form1">
-					</div>    
-			   </form>
+                       <div class="box-body table-responsive no-padding">
+   <?php if ($totalRows_mos_curso !== 0) { 
+              
+ // Show if recordset emptyxx ?>
+  <table class="table table-bordered table-striped table-hover table-condensed tablesorter">
+  <!--fecha,p.usu_id,u.usu_nombre,monto-->
+    <tr>
+      <td><strong>Fecha</strong></td>
+      <td><strong>Cod Vendedor</strong></td>
+	  <td><strong>Nombre Vendedor</strong></td>
+	  <td><strong>Monto Estimado</strong></td>
+      <td align="center"><strong> <element>Editar</element></strong></td>
+      <td colspan="2" align="center"><strong>Acciones</strong></td>
+    </tr>
+    <?php do { ?>
+      <tr>
+        <td><?php echo $row_mos_curso['fecha']; ?></td>
+        <td><?php echo $row_mos_curso['usu_id']; ?></td>
+        <td><?php echo $row_mos_curso['usu_nombre']; ?></td>
+		 <td><?php echo $row_mos_curso['monto']; ?></td>
+      <td><div align="center"><a href="producto_edit.php?id=<?php echo $row_mos_curso['pro_id']; ?>" title="Editar" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Editar"><i class="fa fa-edit"></i></button></a></div></td>
+        <td><div align="center"><a onclick="return confirm('¿Seguro que desea eliminar?')" href="producto_delete.php?id=<?php echo $row_mos_curso['pro_id']; ?>" title="Eliminar" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Eliminar"><i class="fa fa-trash-o"></i></button></a></div></td>
+      </tr>
+      <?php } while ($row_mos_curso = mysql_fetch_assoc($mos_curso)); ?>
+
+    <tr>
+      <td colspan="10">
+        <div class="row">
+            <div class="col-md-6">
+        <table>
+          <tr>
+            <td>
+<?php if ($pageNum_mos_curso > 0) { // Show if not first page ?>
+        <a title="Primero" href="<?php printf("%s?pageNum_mos_curso=%d%s", $currentPage, 0, $queryString_mos_curso); ?>"> <button class="btn btn-default btn-sm" type="button"><i class="fa fa-step-backward"></i></button></a>
+        <?php } // Show if not first page ?></td>
+    <td><?php if ($pageNum_mos_curso > 0) { // Show if not first page ?>
+        <a title="Anterior" href="<?php printf("%s?pageNum_mos_curso=%d%s", $currentPage, max(0, $pageNum_mos_curso - 1), $queryString_mos_curso); ?>"><button class="btn btn-default btn-sm" type="button"><i class="fa fa-backward"></i></button></a>
+        <?php } // Show if not first page ?></td>
+    <td><?php if ($pageNum_mos_curso < $totalPages_mos_curso) { // Show if not last page ?>
+        <a title="Siguiente" href="<?php printf("%s?pageNum_mos_curso=%d%s", $currentPage, min($totalPages_mos_curso, $pageNum_mos_curso + 1), $queryString_mos_curso); ?>"><button class="btn btn-default btn-sm" type="button"><i class="fa fa-forward"></i></button></a>
+        <?php } // Show if not last page ?></td>
+    <td><?php if ($pageNum_mos_curso < $totalPages_mos_curso) { // Show if not last page ?>
+        <a title="Ultimo" href="<?php printf("%s?pageNum_mos_curso=%d%s", $currentPage, $totalPages_mos_curso, $queryString_mos_curso); ?>"><button class="btn btn-default btn-sm" type="button"><i class="fa fa-fast-forward"></i></button></a>
+        <?php } // Show if not last page ?></td>
+      <!-- prueba-->
+      
+            </tr>
+      </table>
             </div>
-        </div>
+            
+            <div class="col-md-6 text-right">
+      Registros <?php echo ($startRow_mos_curso + 1) ?> a <?php echo min($startRow_mos_curso + $maxRows_mos_curso, $totalRows_mos_curso) ?> de <?php echo $totalRows_mos_curso ?>
+          </div>
+       </div>
+            
+        </td>
+      </tr>
+  </table>
+  <?php 
+  } // Show if recordset empty
+  else 
+  { 
+  echo '<br>';
+  echo '<div class="alert alert-info alert-dismissable">
+         <i class="fa fa-info"></i>
+     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+             <b>Alerta !</b> Ningun registro encontrado !!
+        </div>';
+  }
+   ?>
+                  </div>
+                  </div>
+                </div>
 <!---->
 
  </div><!-- /.primary-->

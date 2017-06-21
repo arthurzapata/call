@@ -49,22 +49,21 @@
                                       <?php } ?>
 
                                         <?php if ($perid == 3) { ?>
-                                        
+                                        <li>
+                                            <a href="ppto.php">
+                                                <i class="fa fa-upload danger"></i> PPTO por Vendedor
+                                            </a>
+                                        </li>
                                          <li>
                                             <a href="index.php">
                                                 <i class="fa fa-gears success"></i> Seguimiento Llamadas
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="importar.php">
-                                                <i class="fa fa-upload danger"></i> Importar Seguimiento
-                                            </a>
-                                        </li>
-                                        <!--<li>
                                             <a href="pedido.php">
                                                 <i class="fa fa-align-center mailbox bg-maroon"></i> Pedidos
                                             </a>
-                                        </li>-->
+                                        </li>
                                         <li>
                                             <a href="documentos.php">
                                                 <i class="fa fa-align-center mailbox bg-black"></i> Comprobantes
@@ -93,8 +92,8 @@
                                         <li>
                                             <a href="rpt_ventas.php"><i class="fa fa-retweet bg-orange"></i> Ventas </a>
                                         </li>
-                                           <li>
-                                             <a href="#.php"><i class="fa fa-comment bg-blue"></i> Ventas por Vendedor</a>
+                                        <li>
+                                            <a href="#.php"><i class="fa fa-comment bg-blue"></i> Indicador Producción</a>
                                         </li>
                                     </ul>
                              </div>
