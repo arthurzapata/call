@@ -129,9 +129,20 @@ if(isset($_POST['from']))
     $to = $_POST['to']; //hasta
     $fromconver = implode('-',array_reverse(explode('-', $from)));
     $toconver = implode('-',array_reverse(explode('-', $to)));
+	//
+    $query1 = "CREATE TEMPORARY TABLE tmp_vtas as
+SELECT p.fecha_ped,p.cc_vendedor,u.usu_nombre,count(1) as cantventa from documento p
+left join call_usuario u on p.cc_vendedor = u.usu_id  where p.fecha_ped between '".$fromconver."' and '".$toconver."'
+group by p.fecha_ped,u.usu_nombre;";
+	mysql_query($query1, $conexion) or die(mysql_error());
 
-    $query_mos_curso = "SELECT p.fecha,u.usu_nombre,sum(total) as venta, monto, ((sum(total)/ monto) - 1) * 100 as crec from ppto p left join call_usuario u on p.usu_id = u.usu_id left join documento d on p.usu_id = d.cc_vendedor and p.fecha = d.fecha_ped 
-      where p.fecha between '".$fromconver."' and '".$toconver."' group by p.fecha,u.usu_nombre";
+	$query2 ="CREATE TEMPORARY TABLE tmp_vis as SELECT v.vis_fecha,v.usu_id,u.usu_nombre,count(1) as cantvis from call_visitas v
+	left join call_usuario u on v.usu_id = u.usu_id where v.vis_fecha between '".$fromconver."' and '".$toconver."'
+	group by v.vis_fecha,u.usu_nombre;";
+	mysql_query($query2, $conexion) or die(mysql_error());
+
+    $query_mos_curso = "select vt.fecha_ped, vt.cc_vendedor,vt.usu_nombre,ifnull(cantventa, 0) as cantventa,ifnull(cantvis,0) as cantvis,(ifnull(cantventa, 0) * 100 )/ ifnull(cantvis,0) as prod from tmp_vtas vt
+	left join tmp_vis  v on  vt.fecha_ped = v.vis_fecha and vt.cc_vendedor = v.usu_id;";
     $mos_curso = mysql_query($query_mos_curso, $conexion) or die(mysql_error());
     $row_mos_curso = mysql_fetch_assoc($mos_curso);
     $totalRows_mos_curso = mysql_num_rows($mos_curso);
@@ -288,7 +299,7 @@ if(isset($_POST['from']))
                 
                 <div class="box box-primary">
                                 
-                  <div class="box-header"> <h3 class="box-title">Reporte de Crecimiento de Ventas </h3></div>
+                  <div class="box-header"> <h3 class="box-title">Reporte de Productividad </h3></div>
                    
                   <div class="box-body">
                     <div class="row" style="margin-bottom:10px;">
@@ -351,21 +362,22 @@ if(isset($_POST['from']))
     <tr>
          <td align="center"><strong>Item</strong></td>
        <td align="center"><strong>Fecha</strong></td>
-       <td align="center"><strong>Vendedor</strong></td>
-	     <td align="center"><strong>Valor de la Venta (VR)</strong></td>
-	     <td align="center"><strong>Monto Estimado (VA)</strong></td>
-       <td align="center"><strong>Crecimiento de Ventas</strong></td>
+	   <td align="center"><strong>Vendedor</strong></td>
+       <td align="center"><strong>Ventas por Día</strong></td>
+	     <td align="center"><strong>Visitas por Día</strong></td>
+	     <td align="center"><strong>Productividad (%)</strong></td>
+       
     </tr>
     <?php do {
       $item++;
      ?>
       <tr>
         <td><?php echo @$item; ?></td>
-        <td><?php echo @$row_mos_curso['fecha']; ?></td>
+        <td><?php echo @$row_mos_curso['fecha_ped']; ?></td>
         <td><?php echo @$row_mos_curso['usu_nombre']; ?></td>
-        <td align="right"><?php echo 'S/ '. @$row_mos_curso['venta']; ?></td>
-		    <td align="right"><?php echo 'S/ '. @$row_mos_curso['monto']; ?></td>
-        <td align="right"><?php echo number_format(@$row_mos_curso['crec'],2); ?></td>
+        <td align="right"><?php echo @$row_mos_curso['cantventa']; ?></td>
+		    <td align="right"><?php echo @$row_mos_curso['cantvis']; ?></td>
+        <td align="right"><?php echo number_format(@$row_mos_curso['prod'],2); ?></td>
       </tr>
       <?php } while (@$row_mos_curso = mysql_fetch_assoc(@$mos_curso)); ?>
 
