@@ -527,7 +527,7 @@ $correo = $row_mos_config['conf_correo'];//'informes@reinademipromo.com'
       	<div class="col-lg-9 col-md-9">
         		<div class="row">
                 	<div class="col-md-6">
-                            <div class="form-group">Apellidos Postulante:
+                            <div class="form-group">Apellidos:
                             <div class="input-group">
                                   <div class="input-group-addon">
                                      <i class="fa fa-user"></i>
@@ -538,7 +538,7 @@ $correo = $row_mos_config['conf_correo'];//'informes@reinademipromo.com'
                     </div>
 
                 	<div class="col-md-6">          
-                              <div class="form-group">Nombres Postulante:
+                              <div class="form-group">Nombres:
                               <div class="input-group">
                                   <div class="input-group-addon">
                                      <i class="fa fa-user"></i>

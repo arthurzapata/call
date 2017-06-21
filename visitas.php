@@ -148,7 +148,10 @@ if (isset($_GET['pageNum_mos_curso'])) {
 $startRow_mos_curso = $pageNum_mos_curso * $maxRows_mos_curso;
 
 mysql_select_db($database_conexion, $conexion);
-$query_mos_curso = "SELECT vis_id,DATE_FORMAT(vis_fecha,'%e-%m-%Y') as vis_fecha,vis_lugar,vis_cli, vis_tipovisita, hora_ini, hora_fin, v.usu_id, DATE_FORMAT(fecha_reg,'%e-%m-%Y') as fecha_reg, u.usu_nombre FROM CALL_VISITAS AS V LEFT JOIN call_usuario as U on V.usu_id = U.usu_id where u.usu_id=".$usuid."";
+$query_mos_curso = "SELECT vis_id,DATE_FORMAT(vis_fecha,'%e-%m-%Y') as vis_fecha,vis_lugar,v.vis_cli, vis_tipovisita, hora_ini, hora_fin, v.usu_id, DATE_FORMAT(v.fecha_reg,'%e-%m-%Y') as fecha_reg, u.usu_nombre,concat(c.nro_doc,' - ',c.razon_social)  as cliente FROM CALL_VISITAS AS v
+LEFT JOIN cliente as c on v.vis_cli = c.cli_id
+LEFT JOIN call_usuario as U on V.usu_id = U.usu_id order by vis_id desc";
+/* where u.usu_id=".$usuid."";*/
 $query_limit_mos_curso = sprintf("%s LIMIT %d, %d", $query_mos_curso, $startRow_mos_curso, $maxRows_mos_curso);
 $mos_curso = mysql_query($query_limit_mos_curso, $conexion) or die(mysql_error());
 $row_mos_curso = mysql_fetch_assoc($mos_curso);
@@ -346,12 +349,13 @@ if (isset($_GET['n']))
     <tr>
       <td><strong>Código</strong></td>
       <td><strong>Fecha Visita</strong></td>
+      <td><strong>Vendedor</strong></td>
+      <td><strong>Cliente</strong></td>
       <td><strong>Hora Ini</strong></td>
       <td><strong>Hora Fin</strong></td>
       <td><strong>Lugar</strong></td>
-      <td><strong>Tipo</strong></td>
-      <td><strong>Vendedor</strong></td>
-      <td><strong>Fecha Registro</strong></td>
+      <!--<td><strong>Tipo</strong></td>
+      <td><strong>Fecha Registro</strong></td>-->
 
       <td align="center"><strong>Activo</strong></td>
       <td colspan="2" align="center"><strong>Acciones</strong></td>
@@ -360,12 +364,14 @@ if (isset($_GET['n']))
       <tr>
         <td><?php echo $row_mos_curso['vis_id']; ?></td>
         <td><?php echo $row_mos_curso['vis_fecha']; ?></td>
+        <td><?php echo $row_mos_curso['usu_nombre']; ?></td>
+        <td><?php echo $row_mos_curso['cliente']; ?></td>
         <td><?php echo $row_mos_curso['hora_ini']; ?></td>
         <td><?php echo $row_mos_curso['hora_fin']; ?></td>
         <td><?php echo $row_mos_curso['vis_lugar']; ?></td>
-        <td><?php echo $row_mos_curso['vis_tipovisita']; ?></td>
-        <td><?php echo $row_mos_curso['usu_nombre']; ?></td>
-        <td><?php echo $row_mos_curso['fecha_reg']; ?></td>
+        <!--<td><?php echo $row_mos_curso['vis_tipovisita']; ?></td>
+        
+        <td><?php echo $row_mos_curso['fecha_reg']; ?></td>-->
        <!--- <td><?php echo '...'; ?></td>
         <td align="center"><?php if($row_mos_curso['cur_activo']==1)
 					 $estado = 'success'; else $estado= 'danger'; ?>

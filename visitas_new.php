@@ -139,7 +139,15 @@ else
 $query_mos_estado = "SELECT e.est_id,  r.emp_id,  COUNT(r.est_id) AS cant,  e.est_nombre, e.est_color FROM  call_registro r RIGHT JOIN call_estado e ON r.est_id = e.est_id WHERE  r.usu_id = ".$usuid." GROUP BY e.est_nombre";
 $mos_estado = mysql_query($query_mos_estado, $conexion) or die(mysql_error());
 $row_mos_estado = mysql_fetch_assoc($mos_estado);
-
+////
+if (isset($_POST['buscar'])) {
+  mysql_select_db($database_conexion, $conexion);
+  $query_mos_pd = "select cli_id,nro_doc,razon_social from cliente where nro_doc =" .$_POST['buscar']."";
+  $mos_pd = mysql_query($query_mos_pd, $conexion) or die(mysql_error());
+  $row_mos_pd = mysql_fetch_assoc($mos_pd);
+  $totalRows_mos_pd = mysql_num_rows($mos_pd);
+}
+//
 $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
@@ -371,21 +379,49 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                   </div>
                    
                   <div class="box-body">
+
+<div class="row" style="margin-bottom:10px;">
+                    <div class="col-sm-3 search-form">
+                    <legend>
+                            <form name="formb" id="formb" action="" method="post" class="text-right">
+                                  <div class="input-group">                            
+                                     <input type="text" name="buscar" class="form-control" placeholder="Buscar Cliente por DNI / RUC ...">
+                                 <div class="input-group-btn">
+                                 <button type="submit" name="q" class="btn btn btn-primary"><i class="fa fa-search"></i></button>
+                                 </div>
+                        </div>                                                     
+                        </form>
+                        </legend>
+                        </div>
+</div>
                     <form method="post" name="form1" action="<?php echo $editFormAction; ?>">
-                      
+                           
+                           <div class="row">
+                              <div class="col-md-2">
+                                  <div class="form-group">RUC / DNI:
+                                      <input type="text" name="vis_ruc"  value="<?php echo htmlentities(@$row_mos_pd['nro_doc'] , ENT_COMPAT, 'UTF-8'); ?>"  class="form-control" readonly>
+                                  </div>  
+                              </div>
+                              <div class="col-md-4">
+                                  <div class="form-group">Nombres / Razón Social:
+                                      <input type="text" name="vis_cliente"  value="<?php echo htmlentities(@$row_mos_pd['razon_social'] , ENT_COMPAT, 'UTF-8'); ?>"  class="form-control" readonly>
+                                  </div>  
+                              </div>
+                              <input type="hidden" name="vis_cli" value="<?php echo htmlentities(@$row_mos_pd['cli_id'] , ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
+                          
+                             <div class="col-md-3">
                         <div class="form-group">Fecha Visita:
                           <div class="input-group">
                            <div class="input-group-addon">
                            <i class="fa fa-calendar"></i></div>
                           <input type="text" id="vis_fecha" name="vis_fecha" value="" class="form-control" placeholder="dd-mm-yyyy" required>
                             </div>
-                        </div>
+                        </div> </div>
+                </div>
                         <div class="form-group">Lugar:
                           <input type="text" name="vis_lugar" value="" class="form-control" maxlength="100">
                         </div>
-                        <div class="form-group">Cliente:
-                          <input type="text" name="vis_cli" value="" class="form-control" maxlength="100">
-                        </div>
+                     
                         <div class="form-group">Tipo Visita:
                           <input type="text" name="vis_tipovisita" value="" class="form-control" maxlength="100">
                         </div>
