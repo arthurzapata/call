@@ -139,6 +139,17 @@ else
 $query_mos_estado = "SELECT e.est_id,  r.emp_id,  COUNT(r.est_id) AS cant,  e.est_nombre, e.est_color FROM  call_registro r RIGHT JOIN call_estado e ON r.est_id = e.est_id WHERE  r.usu_id = ".$usuid." GROUP BY e.est_nombre";
 $mos_estado = mysql_query($query_mos_estado, $conexion) or die(mysql_error());
 $row_mos_estado = mysql_fetch_assoc($mos_estado);
+
+/////
+//vendedores
+mysql_select_db($database_conexion, $conexion);
+if ($perid == 2)//admin
+  $query_lista_user = "SELECT usu_id, usu_nombre FROM call_usuario where usu_id=".$usuid."  and usu_activo=1";
+else 
+  $query_lista_user = "SELECT usu_id, usu_nombre FROM call_usuario where per_id in (2) and usu_activo=1";
+$lista_user = mysql_query($query_lista_user, $conexion) or die(mysql_error());
+$row_lista_user = mysql_fetch_assoc($lista_user);
+$totalRows_lista_user = mysql_num_rows($lista_user);
 ////
 if (isset($_POST['buscar'])) {
   mysql_select_db($database_conexion, $conexion);
@@ -166,7 +177,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                        //GetSQLValueString(isset($_POST['cur_activo']) ? "true" : "", "defined","1","0"),
                        GetSQLValueString($_POST['hora_ini'], "text"),
                        GetSQLValueString($_POST['hora_fin'], "text"),
-                       GetSQLValueString($usuid, "text"),
+                       GetSQLValueString($_POST['usu_id'], "int"),
                        GetSQLValueString($_POST['motivo'], "text"));
 
   mysql_select_db($database_conexion, $conexion);
@@ -417,6 +428,21 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                           <input type="text" id="vis_fecha" name="vis_fecha" value="" class="form-control" placeholder="dd-mm-yyyy" required>
                             </div>
                         </div> </div>
+                          <div class="col-md-3"> 
+                          <div class="form-group">Vendedor :
+                          <!--<input type="text" id="usu_id" name="usu_id" value="" class="form-control" required>-->
+                  <select name="usu_id" id="usu_id" class="form-control">
+                      <?php
+                      echo '<option value="0">-- Seleccione --</option>';           
+                      do
+                            { 
+                                echo '<option value="'.$row_lista_user['usu_id'].'">'.$row_lista_user['usu_nombre'].'</option>';
+                            } while ($row_lista_user = mysql_fetch_assoc($lista_user));              
+                            ?>
+                    </select>
+
+                      </div>
+                        </div>               
                 </div>
                         <div class="form-group">Lugar:
                           <input type="text" name="vis_lugar" value="" class="form-control" maxlength="100">

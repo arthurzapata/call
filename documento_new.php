@@ -172,80 +172,59 @@ if (isset($_POST['buscar'])) {
   $totalRows_mos_pd = mysql_num_rows($mos_pd);
 }
 
-
-	$fechaactual = date("Y-m-d");
-//// nuevo pedido
+//vendedores
 mysql_select_db($database_conexion, $conexion);
-$query_nro_ped = "SELECT MAX(nro_pedido) + 1 as nroped FROM call_pedido";
-$nro_ped = mysql_query($query_nro_ped, $conexion) or die(mysql_error());
-$row_nro_ped = mysql_fetch_assoc($nro_ped);
-$totalRows_nro_ped = mysql_num_rows($nro_ped);
-	
-if ($row_nro_ped['nroped']== "")	
-{
-$idped = 1;}
-else
-{
-$idped = $row_nro_ped['nroped'];}
-/*$sql = "SELECT MAX(id_pedido) + 1 FROM pedido";
+if ($perid == 2)//admin
+  $query_lista_user = "SELECT usu_id, usu_nombre FROM call_usuario where usu_id=".$usuid."  and usu_activo=1";
+else 
+  $query_lista_user = "SELECT usu_id, usu_nombre FROM call_usuario where per_id in (2) and usu_activo=1";
+$lista_user = mysql_query($query_lista_user, $conexion) or die(mysql_error());
+$row_lista_user = mysql_fetch_assoc($lista_user);
+$totalRows_lista_user = mysql_num_rows($lista_user);
 
-$result = mysql_query ($sql);
-if (! $result){
-   echo "La consulta SQL contiene errores.".mysql_error();
-   exit();
-}else {
-   
-    while ($row = mysql_fetch_row($result))
-	{
-       $idped = $row[0];		
-    }
-
- }
-//*/
-/*consulta obtener id _Pedidpo*/
-
+$fechaactual = date("Y-m-d");
+//// nuevo pedido
 $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
 
 if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form2")) {
-	//actualizamos estado  mesa
-	$updateSQL = sprintf("update mesa set estado = 1 where id_meza = %s",
-                       	GetSQLValueString($_SESSION['mesa'], "int"));
-	mysql_select_db($database_conexion, $conexion);
-	$Resultup = mysql_query($updateSQL, $conexion) or die(mysql_error());
 	//
 	date_default_timezone_set('America/Lima');
 	$fecha = date("Y-m-d");
 	$hora = date("H:i:s");
-	
-	// obtener el cierre
-  	mysql_select_db($database_conexion, $conexion);
-	$query_ultima_apertura = "SELECT * FROM cierre ORDER BY id_cierre DESC LIMIT 1";
-	$ultima_apertura = mysql_query($query_ultima_apertura, $conexion) or die(mysql_error());
-	$row_ultima_apertura = mysql_fetch_assoc($ultima_apertura);
-	$totalRows_ultima_apertura = mysql_num_rows($ultima_apertura);
+//
+mysql_select_db($database_conexion, $conexion);
+$query_nro_ped = "SELECT MAX(cn_numero) + 1 as nroped FROM documento";
+$nro_ped = mysql_query($query_nro_ped, $conexion) or die(mysql_error());
+$row_nro_ped = mysql_fetch_assoc($nro_ped);
+$totalRows_nro_ped = mysql_num_rows($nro_ped);
+  
+if ($row_nro_ped['cn_numero']== "") 
+{
+$idped = 1;}
+else
+{
+$idped = $row_nro_ped['cn_numero'];
+}
   	//
-  	$insertSQL = sprintf("INSERT INTO pedido (id_pedido, id_emp,fecha_ped,id_meza, estado_ped,total,hora_ped,id_cierre) 
-  						VALUES (%s, %s, %s,%s, %s, %s, %s, %s)",
-                       	GetSQLValueString($idped, "int"),
-                       	GetSQLValueString($row_mos_usuario['id_emp'], "int"),
-					   	GetSQLValueString($fecha, "date"),
-						GetSQLValueString($_SESSION['mesa'], "int"),
-						GetSQLValueString(0, "int"),// 0 PEDIDO EN ESPERAAA 1 PEDIDO CANCELADO
-                       	GetSQLValueString($_SESSION['total'], "double"),
-						GetSQLValueString($hora, "text"),
-						GetSQLValueString($row_ultima_apertura['id_cierre'], "int"));
-
+  	$insertSQL = sprintf("INSERT INTO documento (cn_serie, cn_numero,tipo_doc, nro_pedido, cc_cliente, cc_vta, cc_moneda, cc_vendedor, total, fecha_ped) 
+  						VALUES (%s, %s, %s,%s, %s, %s, %s, %s, %s, %s)",
+                       	  GetSQLValueString($idped, "int"),
+                       	  GetSQLValueString($row_mos_usuario['id_emp'], "int"),
+					   	            GetSQLValueString($fecha, "date"),
+						              GetSQLValueString($_SESSION['mesa'], "int"),
+						              GetSQLValueString(0, "int"),// 0 PEDIDO EN ESPERAAA 1 PEDIDO CANCELADO
+                       	  GetSQLValueString($_SESSION['total'], "double"),
+						              GetSQLValueString($hora, "text"),
+						              GetSQLValueString($row_ultima_apertura['id_cierre'], "int"));
   mysql_select_db($database_conexion, $conexion);
-
   $Result1 = mysql_query($insertSQL, $conexion) or die(mysql_error());
+  //detalle
+  $producto = isset($_POST['KEY_PROD']) ? $_POST['KEY_PROD'] : NULL;
+  for ($i=0;$i<sizeof($producto);$i++){
 
- //detalle
-$producto = isset($_POST['KEY_PROD']) ? $_POST['KEY_PROD'] : NULL;
-for ($i=0;$i<sizeof($producto);$i++){
-/*if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form2")) {*/
   $query = sprintf("INSERT INTO det_pedido (id_pedido, id_plat,cantidad, importe) VALUES (%s, %s, %s, %s)",
                        GetSQLValueString($idped, "int"),
 					   GetSQLValueString($producto[$i], "int"),
@@ -253,13 +232,10 @@ for ($i=0;$i<sizeof($producto);$i++){
 					   GetSQLValueString($_POST['importe'], "double"));
  	mysql_select_db($database_conexion, $conexion);
   	$Result2 = mysql_query($query, $conexion) or die(mysql_error());
-/*		unset($_SESSION['cart']);
-		unset($_SESSION['items']);
-		unset($_SESSION['total']);
-*/
-	$mensaje = 'Pedido Registrado Correctamente.';
+
+	$mensaje = 'Comprobante Registrado Correctamente.';
   	//
-    $insertGoTo = "seleccionar_mesa.php?n=$mensaje";
+    $insertGoTo = "documentos.php?n=$mensaje";
   	if (isset($_SERVER['QUERY_STRING'])) {
     $insertGoTo .= (strpos($insertGoTo, '?')) ? "&" : "?";
     $insertGoTo .= $_SERVER['QUERY_STRING'];
@@ -451,7 +427,7 @@ for ($i=0;$i<sizeof($producto);$i++){
 										<div class="input-group-addon">
 										  <i class="fa fa-calendar"></i>
 										</div>
-										<input type="text" id="fecha_ped" name="fecha_ped" value="<?php echo $fechaactual;?>" class="form-control" readonly="true" required>
+										<input type="text" id="fecha_ped" name="fecha_ped" value="<?php echo $fechaactual;?>" class="form-control" required>
 									</div>
 								</div>
 							</div>
@@ -468,13 +444,37 @@ for ($i=0;$i<sizeof($producto);$i++){
 							</div>
 							<input type="hidden" name="cli_id" id="cli_id" value="<?php echo htmlentities($row_mos_curso['cli_id'], ENT_COMPAT, 'UTF-8'); ?>">
 					   </div>
-					   <div class="row">
-							<div class="col-md-1">Cod Vend
+					  
+                  <div class="form-group">Vendedor :
+                       <select name="cc_vendedor" id="cc_vendedor" class="form-control">
+                            <?php
+                            echo '<option value="0">-- Seleccione --</option>';           
+                            do
+                                  { 
+                                      echo '<option value="'.$row_lista_user['usu_id'].'">'.$row_lista_user['usu_nombre'].'</option>';
+                                  } while ($row_lista_user = mysql_fetch_assoc($lista_user));              
+                                  ?>
+                          </select>
+
+ <!--
+                                  <select name="usu_id" id="usu_id" class="form-control">
+                                  <?php 
+                                    do { ?>
+                                    <option value="<?php echo $row_lista_user['usu_id']?>"
+                <?php if (!(strcmp($row_lista_user['usu_id'], htmlentities($row_mos_curso['cc_vendedor'], ENT_COMPAT, 'UTF-8')))) {echo "SELECTED";} ?>>
+                <?php echo $row_lista_user['usu_nombre']?></option>
+                                    <?php
+                                    } while ($row_lista_user = mysql_fetch_assoc($lista_user));
+                                    ?>
+                                </select>
+-->
+                  </div>
+							<!--<div class="col-md-1">Cod Vend
 								<div class="form-group"><input type="text" name="codven" class="form-control" value="<?php echo htmlentities(@$row_mos_curso['cc_vendedor'], ENT_COMPAT, 'UTF-8'); ?>" required> </div>
 							</div>
 							<div class="col-md-4">Vendedor
 								<div class="form-group"><input type="text" name="vendor" class="form-control" value="<?php echo htmlentities(@$row_mos_curso['usu_nombre'], ENT_COMPAT, 'UTF-8'); ?>"  required> </div>
-							</div>
+							</div>-->
 					   </div>
 					   <?php if ($totalRows_mos_pd !== 0) { ?>
               			  <table class="table table-bordered table-striped table-hover table-condensed tablesorter">
@@ -561,7 +561,7 @@ for ($i=0;$i<sizeof($producto);$i++){
            
     <script type="text/javascript">
       $(function() {
-        $( "#from" ).datepicker({
+        $( "#fecha_ped" ).datepicker({
           defaultDate: "",
           changeMonth: true, 
           numberOfMonths: 1,dateFormat: "dd-mm-yy",
@@ -578,7 +578,7 @@ for ($i=0;$i<sizeof($producto);$i++){
           dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
           monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
           onClose: function( selectedDate ) {
-            $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+            $( "#fecha_ped" ).datepicker( "option", "maxDate", selectedDate );
           }
         });
       });
