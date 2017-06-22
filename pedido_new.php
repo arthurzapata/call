@@ -188,13 +188,15 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
   $fecha_remitido = $_POST['fecha_ped'];
   $fechaconver = implode('-',array_reverse(explode('-', $fecha_remitido)));
   
+  $importe = $_POST['cantidad'] * $_POST['precio'];
+
   $insertSQL = sprintf("INSERT INTO call_pedido (nro_pedido, cli_id,ped_estado, cc_vendedor, total,  fecha_ped, requerimiento) 
   						VALUES (%s, %s, %s,%s, %s, %s, %s)",
               GetSQLValueString($idped, "int"), //numero
 						  GetSQLValueString($_POST['cli_id'], "int"), 
               GetSQLValueString(1, "int"),
 					   	GetSQLValueString($_POST['cc_vendedor'], "int"),
-						  GetSQLValueString($_POST['total'], "decimal"),
+						  GetSQLValueString($importe, "decimal"), //total
 						  GetSQLValueString($fechaconver,"date"),
 						  GetSQLValueString($_POST['requerimiento'], "text"));
   mysql_select_db($database_conexion, $conexion);
@@ -202,14 +204,17 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
   //detalle
   /*$producto = isset($_POST['KEY_PROD']) ? $_POST['KEY_PROD'] : NULL;
   for ($i=0;$i<sizeof($producto);$i++){
+;*/
+  
 
-  $query = sprintf("INSERT INTO det_pedido (id_pedido, id_plat,cantidad, importe) VALUES (%s, %s, %s, %s)",
-                       GetSQLValueString($idped, "int"),
-					   GetSQLValueString($producto[$i], "int"),
+  $query = sprintf("INSERT INTO call_pedido_det (nro_pedido, pro_id,cant,precio, importe) VALUES (%s, %s, %s, %s, %s)",
+             GetSQLValueString($idped, "int"),
+					   GetSQLValueString($_POST['pro_id'], "int"),
 					   GetSQLValueString($_POST['cantidad'], "int"),
-					   GetSQLValueString($_POST['importe'], "double"));
+					   GetSQLValueString($_POST['precio'], "double"),
+             GetSQLValueString($importe, "double"));
  	mysql_select_db($database_conexion, $conexion);
-  	$Result2 = mysql_query($query, $conexion) or die(mysql_error());*/
+  $Result2 = mysql_query($query, $conexion) or die(mysql_error());
 
 	$mensaje = 'Pedido Registrado Correctamente.';
   	//
@@ -394,7 +399,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                                       <input type="text" name="vis_cliente"  value="<?php echo htmlentities(@$row_mos_pd['razon_social'] , ENT_COMPAT, 'UTF-8'); ?>"  class="form-control" readonly>
                                   </div>  
                               </div>
-                              <input type="hidden" name="vis_cli" value="<?php echo htmlentities(@$row_mos_pd['cli_id'] , ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
+                              <input type="hidden" name="cli_id" value="<?php echo htmlentities(@$row_mos_pd['cli_id'] , ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
                 
                 <div class="col-md-2">
                   <div class="form-group">Estado:
@@ -406,18 +411,18 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                     </div> 
                  </div>          
                 <div class="col-md-2">
-                  <div class="form-group">Fecha Visita:
+                  <div class="form-group">Fecha Pedido:
                     <div class="input-group">
                         <div class="input-group-addon">
                            <i class="fa fa-calendar"></i></div>
-                         <input type="text" id="vis_fecha" name="vis_fecha" value="" class="form-control" placeholder="dd-mm-yyyy" required>
+                         <input type="text" id="fecha_ped" name="fecha_ped" value="" class="form-control" placeholder="dd-mm-yyyy" required>
                          </div>
                     </div> 
                  </div>
                           <div class="col-md-2"> 
                           <div class="form-group">Vendedor :
                           <!--<input type="text" id="usu_id" name="usu_id" value="" class="form-control" required>-->
-                  <select name="usu_id" id="usu_id" class="form-control">
+                  <select name="cc_vendedor" id="cc_vendedor" class="form-control">
                       <?php
                       //echo '<option value="0">-- Seleccione --</option>';           
                       do
