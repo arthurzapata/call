@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-06-2017 a las 04:32:16
+-- Tiempo de generación: 22-06-2017 a las 17:36:57
 -- Versión del servidor: 5.6.21
 -- Versión de PHP: 5.6.3
 
@@ -369,22 +369,24 @@ CREATE TABLE IF NOT EXISTS `documento` (
   `fecha_reg` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `cc_vendedor` int(11) NOT NULL,
   `total` decimal(18,2) DEFAULT NULL,
-  `fecha_ped` date NOT NULL
+  `fecha_ped` date NOT NULL,
+  `igv` decimal(18,2) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `documento`
 --
 
-INSERT INTO `documento` (`cn_serie`, `cn_numero`, `tipo_doc`, `nro_pedido`, `cc_cliente`, `cc_vta`, `cc_moneda`, `fecha_reg`, `cc_vendedor`, `total`, `fecha_ped`) VALUES
-('F011', '0000001', '01', 1, 10, 1, '01', '2017-06-22 00:11:26', 14, '118.00', '2017-06-01'),
-('F021', '0000002', '01', 22, 22, 2, '01', '2017-06-22 00:11:23', 14, '338.00', '2017-06-02'),
-('F021', '0000003', '01', 3232, 11, 2, '01', '2017-06-22 00:11:19', 16, '1180.00', '2017-06-02'),
-('F021', '0000004', '01', 354554, 1, 2, '01', '2017-06-22 00:11:17', 14, '600.00', '2017-06-01'),
-('F001', '0000005', '01', 4545, 1, 1, '01', '2017-06-22 00:11:12', 16, '100.00', '2017-06-03'),
-('F011', '0000007', '1', 1, 1, 1, '01', '2017-06-22 00:12:12', 15, '1298.00', '2017-06-21'),
-('F011', '0000006', '1', 1, 1, 1, '01', '2017-06-22 00:09:15', 14, NULL, '2017-06-14'),
-('F011', '0000008', '01', 1, 1, 1, '01', '2017-06-22 00:16:49', 13, '1298.00', '2017-06-20');
+INSERT INTO `documento` (`cn_serie`, `cn_numero`, `tipo_doc`, `nro_pedido`, `cc_cliente`, `cc_vta`, `cc_moneda`, `fecha_reg`, `cc_vendedor`, `total`, `fecha_ped`, `igv`) VALUES
+('F011', '0000001', '01', 1, 10, 1, '01', '2017-06-22 00:11:26', 14, '118.00', '2017-06-01', NULL),
+('F021', '0000002', '01', 22, 22, 2, '01', '2017-06-22 00:11:23', 14, '338.00', '2017-06-02', NULL),
+('F021', '0000003', '01', 3232, 11, 2, '01', '2017-06-22 00:11:19', 16, '1180.00', '2017-06-02', NULL),
+('F021', '0000004', '01', 354554, 1, 2, '01', '2017-06-22 00:11:17', 14, '600.00', '2017-06-01', NULL),
+('F001', '0000005', '01', 4545, 1, 1, '01', '2017-06-22 00:11:12', 16, '100.00', '2017-06-03', NULL),
+('F011', '0000007', '1', 1, 1, 1, '01', '2017-06-22 14:38:38', 15, '1298.00', '2017-06-21', '198.00'),
+('F011', '0000006', '1', 1, 1, 1, '01', '2017-06-22 00:09:15', 14, NULL, '2017-06-14', NULL),
+('F011', '0000008', '01', 1, 1, 1, '01', '2017-06-22 14:38:33', 13, '1298.00', '2017-06-20', '198.00'),
+('F011', '0000009', '01', 1, 1, 1, '01', '2017-06-22 14:38:18', 12, '1298.00', '2017-06-16', '198.00');
 
 -- --------------------------------------------------------
 
@@ -398,8 +400,16 @@ CREATE TABLE IF NOT EXISTS `documento_det` (
   `cn_numero` varchar(8) COLLATE utf8_spanish_ci NOT NULL,
   `pro_id` int(11) NOT NULL,
   `cant` int(11) NOT NULL,
-  `precio` decimal(18,2) NOT NULL
+  `precio` decimal(18,2) NOT NULL,
+  `importe` decimal(18,2) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `documento_det`
+--
+
+INSERT INTO `documento_det` (`cn_item`, `cn_serie`, `cn_numero`, `pro_id`, `cant`, `precio`, `importe`) VALUES
+('1', 'F011', '0000009', 1, 1, '850.00', '980.00');
 
 -- --------------------------------------------------------
 
