@@ -137,30 +137,28 @@ $query_limit_mos_curso = sprintf("%s LIMIT %d, %d", $query_mos_curso, $startRow_
 $mos_curso = mysql_query($query_limit_mos_curso, $conexion) or die(mysql_error());
 $row_mos_curso = mysql_fetch_assoc($mos_curso);
 
-if (isset($_GET['totalRows_mos_curso'])) {
-  $totalRows_mos_curso = $_GET['totalRows_mos_curso'];
-} else {
-  $all_mos_curso = mysql_query($query_mos_curso);
-  $totalRows_mos_curso = mysql_num_rows($all_mos_curso);
-}
-$totalPages_mos_curso = ceil($totalRows_mos_curso/$maxRows_mos_curso)-1;
-
+//vendedores
+mysql_select_db($database_conexion, $conexion);
+if ($perid == 2)//admin
+  $query_lista_user = "SELECT usu_id, usu_nombre FROM call_usuario where usu_id=".$usuid."  and usu_activo=1";
+else 
+  $query_lista_user = "SELECT usu_id, usu_nombre FROM call_usuario where per_id in (2) and usu_activo=1";
+$lista_user = mysql_query($query_lista_user, $conexion) or die(mysql_error());
+$row_lista_user = mysql_fetch_assoc($lista_user);
+$totalRows_lista_user = mysql_num_rows($lista_user);
+//Producto
+$query_lista_prod = "SELECT pro_id, pro_descripcion FROM producto where pro_activo=1";
+$lista_prod = mysql_query($query_lista_prod, $conexion) or die(mysql_error());
+$row_lista_prod = mysql_fetch_assoc($lista_prod);
+$totalRows_lista_prod = mysql_num_rows($lista_prod);
+////Buscar cliente
 if (isset($_POST['buscar'])) {
-    mysql_select_db($database_conexion, $conexion);
-  $query_mos_curso = "SELECT * FROM documento where cn_serie+'-'+cn_numero like '%".$_POST['buscar']."%'";
-  $mos_curso = mysql_query($query_mos_curso, $conexion) or die(mysql_error());
-  $row_mos_curso = mysql_fetch_assoc($mos_curso);
+  mysql_select_db($database_conexion, $conexion);
+  $query_mos_pd = "select cli_id,nro_doc,razon_social from cliente where nro_doc =" .$_POST['buscar']."";
+  $mos_pd = mysql_query($query_mos_pd, $conexion) or die(mysql_error());
+  $row_mos_pd = mysql_fetch_assoc($mos_pd);
+  $totalRows_mos_pd = mysql_num_rows($mos_pd);
 }
-// obtenemos msje resultado insertado
-if (isset($_GET['n'])) 
-{
-  $var = $_GET['n'];
-  $msj = '<div class="alert alert-info alert-dismissable">
-         <i class="fa fa-info"></i>
-     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-             <b>Alerta !</b>'.$var.'!!  </div>';
-}
-/////////////////22-06-2017
 //// nuevo pedido
 $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
@@ -172,30 +170,30 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
 	date_default_timezone_set('America/Lima');
 	$fecha = date("Y-m-d");
 	$hora = date("H:i:s");
-//
-mysql_select_db($database_conexion, $conexion);
-$query_nro_ped = "SELECT LPAD(MAX(nro_pedido) + 1,7,'0') as nroped FROM call_pedido";
-$nro_ped = mysql_query($query_nro_ped, $conexion) or die(mysql_error());
-$row_nro_ped = mysql_fetch_assoc($nro_ped);
-$totalRows_nro_ped = mysql_num_rows($nro_ped);
+  //
+  mysql_select_db($database_conexion, $conexion);
+  $query_nro_ped = "SELECT MAX(nro_pedido) + 1 as nroped FROM call_pedido";
+  $nro_ped = mysql_query($query_nro_ped, $conexion) or die(mysql_error());
+  $row_nro_ped = mysql_fetch_assoc($nro_ped);
+  $totalRows_nro_ped = mysql_num_rows($nro_ped);
   
-if ($row_nro_ped['nroped']== "") 
-{
-$idped = '0000001';}
-else
-{
-$idped = $row_nro_ped['nroped'];
-}
+  if ($row_nro_ped['nroped']== "") 
+  {
+  $idped = '1';}
+  else
+  {
+  $idped = $row_nro_ped['nroped'];
+  }
 
   $fecha_remitido = $_POST['fecha_ped'];
   $fechaconver = implode('-',array_reverse(explode('-', $fecha_remitido)));
   
   $insertSQL = sprintf("INSERT INTO call_pedido (nro_pedido, cli_id,ped_estado, cc_vendedor, total,  fecha_ped, requerimiento) 
   						VALUES (%s, %s, %s,%s, %s, %s, %s)",
-                       	  GetSQLValueString($idped, "text"), //numero
-						  GetSQLValueString($_POST['cli_id'], "text"), 
-                       	  GetSQLValueString(1, "int"),
-					   	  GetSQLValueString($_POST['cc_vendedor'], "int"),
+              GetSQLValueString($idped, "int"), //numero
+						  GetSQLValueString($_POST['cli_id'], "int"), 
+              GetSQLValueString(1, "int"),
+					   	GetSQLValueString($_POST['cc_vendedor'], "int"),
 						  GetSQLValueString($_POST['total'], "decimal"),
 						  GetSQLValueString($fechaconver,"date"),
 						  GetSQLValueString($_POST['requerimiento'], "text"));
@@ -369,44 +367,115 @@ $idped = $row_nro_ped['nroped'];
                   <div class="box-header"> <h3 class="box-title"> Nuevo Pedido </h3></div>
                    
                   <div class="box-body">
-                    <!--<div class="row" style="margin-bottom:10px;">
-                      <div class="col-sm-6">
-                         <a class="btn btn-primary" href="pedido_new.php"><i class="fa fa-pencil"></i> Agregar</a>
-                      </div>
-                    <div class="col-sm-6 search-form">
+                  <div class="row" style="margin-bottom:10px;">
+                    <div class="col-sm-3 search-form">
+                    <legend>
                             <form name="formb" id="formb" action="" method="post" class="text-right">
-                                  <div class="input-group">                                          
-                                     <input type="text" name="buscar" class="form-control" placeholder="Buscar ...">
+                                  <div class="input-group">                            
+                                     <input type="text" name="buscar" class="form-control" placeholder="Buscar Cliente por DNI / RUC ...">
                                  <div class="input-group-btn">
                                  <button type="submit" name="q" class="btn btn btn-primary"><i class="fa fa-search"></i></button>
                                  </div>
                         </div>                                                     
                         </form>
+                        </legend>
                         </div>
-                   </div> -->    
-                  <form method="post" name="form1" action="<?php echo $editFormAction; ?>">
-                      <div class="row" style="margin-bottom:10px;">
-                        <div class="col-md-4">
-                            <div class="form-group">Cliente :
-                              <input type="text" id="cli_id" name="cli_id" value="" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                        <div class="form-group">Fecha Ped :
-                        <div class="input-group">
-                            <div class="input-group-addon">
-                              <i class="fa fa-calendar"></i>
-                            </div>
-                            <input type="text" id="fecha_ped" name="fecha_ped" value="" class="form-control" required>
-                        </div>
-						</div>
+</div>
+                    <form method="post" name="form1" action="<?php echo $editFormAction; ?>">
+                           
+                           <div class="row">
+                              <div class="col-md-2">
+                                  <div class="form-group">RUC / DNI:
+                                      <input type="text" name="vis_ruc"  value="<?php echo htmlentities(@$row_mos_pd['nro_doc'] , ENT_COMPAT, 'UTF-8'); ?>"  class="form-control" readonly>
+                                  </div>  
+                              </div>
+                              <div class="col-md-4">
+                                  <div class="form-group">Nombres / Razón Social:
+                                      <input type="text" name="vis_cliente"  value="<?php echo htmlentities(@$row_mos_pd['razon_social'] , ENT_COMPAT, 'UTF-8'); ?>"  class="form-control" readonly>
+                                  </div>  
+                              </div>
+                              <input type="hidden" name="vis_cli" value="<?php echo htmlentities(@$row_mos_pd['cli_id'] , ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
+                
+                <div class="col-md-2">
+                  <div class="form-group">Estado:
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                           <i class="fa fa-calendar"></i></div>
+                         <input type="text" id="estado" name="estado" value="EMITIDO" class="form-control"  readonly>
+                         </div>
+                    </div> 
+                 </div>          
+                <div class="col-md-2">
+                  <div class="form-group">Fecha Visita:
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                           <i class="fa fa-calendar"></i></div>
+                         <input type="text" id="vis_fecha" name="vis_fecha" value="" class="form-control" placeholder="dd-mm-yyyy" required>
+                         </div>
+                    </div> 
+                 </div>
+                          <div class="col-md-2"> 
+                          <div class="form-group">Vendedor :
+                          <!--<input type="text" id="usu_id" name="usu_id" value="" class="form-control" required>-->
+                  <select name="usu_id" id="usu_id" class="form-control">
+                      <?php
+                      //echo '<option value="0">-- Seleccione --</option>';           
+                      do
+                            { 
+                                echo '<option value="'.$row_lista_user['usu_id'].'">'.$row_lista_user['usu_nombre'].'</option>';
+                            } while ($row_lista_user = mysql_fetch_assoc($lista_user));              
+                            ?>
+                    </select>
 
-                        </div>
-                   </form>
-                       
-                  </div>
+                      </div>
+                        </div>               
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                      <div class="form-group">Requerimientos:   
+                            <textarea class="form-control" id="requerimiento" name="requerimiento" cols="50" rows="4">
+                       </textarea>   
+                      </div>
                   </div>
                 </div>
+
+                 <div class="row">
+                     <div class="col-md-6">
+                        <div class="form-group">Producto o Servicio:
+                            <select name="pro_id" id="pro_id" class="form-control">
+                              <?php
+                              //echo '<option value="0">-- Seleccione --</option>';           
+                              do
+                              { 
+                                echo '<option value="'.$row_lista_prod['pro_id'].'">'.$row_lista_prod['pro_descripcion'].'</option>';
+                              } while ($row_lista_prod = mysql_fetch_assoc($lista_prod));              
+                              ?>
+                            </select>
+                        </div>
+                     </div>
+                     <div class="col-md-3">
+                       <div class="form-group">Precio:
+                             <input type="text" id="precio" name="precio" value="" class="form-control"  required>
+                       </div>
+                     </div>
+                     <div class="col-md-3">Cantidad
+                          <input type="number" id="cantidad" name="cantidad" value="1" class="form-control" min="1" required>
+                     </div>
+                    <!--<div class="col-md-2">Importe
+                          <input type="text" id="cantidad" name="cantidad" value="" class="form-control"  required>
+                     </div>-->
+                 </div>
+        <div class="box-footer">
+              <button type="submit" class="btn btn-primary pull-left"><i class="fa fa-save"></i> Guardar</button>
+              <a href="pedido.php" style="margin-left:10px;"><button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button></a>
+              <input type="hidden" name="MM_insert" value="form1">
+          </div>   
+
+                 </form>
+                       
+                 </div>
+             </div>
+          </div>
 <!---->
 
  </div><!-- /.primary-->
@@ -427,7 +496,7 @@ $idped = $row_nro_ped['nroped'];
            
     <script type="text/javascript">
       $(function() {
-        $( "#from" ).datepicker({
+        $( "#vis_fecha" ).datepicker({
           defaultDate: "",
           changeMonth: true, 
           numberOfMonths: 1,dateFormat: "dd-mm-yy",
@@ -444,7 +513,7 @@ $idped = $row_nro_ped['nroped'];
           dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
           monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
           onClose: function( selectedDate ) {
-            $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+            $( "#vis_fecha" ).datepicker( "option", "maxDate", selectedDate );
           }
         });
       });
