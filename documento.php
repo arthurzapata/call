@@ -109,7 +109,7 @@ if (isset($_GET['nro'])) {
 }
 
 mysql_select_db($database_conexion, $conexion);
-$query_mos_curso = "SELECT cn_serie,cn_numero,tipo_doc,nro_pedido,c.nro_doc,c.razon_social,cc_vta,cc_moneda,d.fecha_reg,u.usu_nombre, total,fecha_ped FROM documento d left join cliente c on d.cc_cliente =c.cli_id 
+$query_mos_curso = "SELECT cn_serie,cn_numero,tipo_doc,nro_pedido,c.nro_doc,c.razon_social,cc_vta,cc_moneda,d.fecha_reg,u.usu_nombre, total,fecha_ped,igv FROM documento d left join cliente c on d.cc_cliente =c.cli_id 
 left join call_usuario u on d.cc_vendedor = u.usu_id where cn_serie='".$ser."' and cn_numero='".$nro."'";
 $mos_curso = mysql_query($query_mos_curso, $conexion) or die(mysql_error());
 $row_mos_curso = mysql_fetch_assoc($mos_curso);
@@ -270,7 +270,7 @@ $row_mos_curso = mysql_fetch_assoc($mos_curso);
                ?>
           </div>
             </div>
-        </div> 
+       
 
         <div class="row">
             <div class="col-lg-8 col-md-8">
@@ -279,9 +279,8 @@ $row_mos_curso = mysql_fetch_assoc($mos_curso);
                 </div>
             </div>
             <div class="col-lg-2 col-md-2">
-                <div class="form-group"><strong>Op. Gravada</strong>
-                </div>
-                <div class="form-group"><strong>I.G.V. (<asp:Label ID="lbl9002" runat="server" Text="Label"></asp:Label>)</strong>
+             
+                <div class="form-group"><strong>I.G.V. (18 %)</strong>
                 </div>
                 <div class="form-group"><strong>Op.Inafecta</strong>
                 </div>
@@ -290,26 +289,23 @@ $row_mos_curso = mysql_fetch_assoc($mos_curso);
                 <div class="form-group"><hr /></div>
                 <div class="form-group"><strong>IMPORTE TOTAL</strong>
                 </div>
-                <div class="form-group"><strong>Total Descuentos</strong>
-                </div>
+               
             </div>
              <div class="col-lg-2 col-md-2 text-right">
-                 <div class="form-group"><asp:Label ID="lblOpGravada" runat="server" Text="Label"></asp:Label>
+                 
+                <div class="form-group"><?php echo $row_mos_curso['igv'];?>
                 </div>
-                <div class="form-group"><asp:Label ID="lblIgv" runat="server" Text="Label"></asp:Label>
+                <div class="form-group">0.00
                 </div>
-                <div class="form-group"><asp:Label ID="lblOpInafecta" runat="server" Text="Label"></asp:Label>
-                </div>
-                <div class="form-group"><asp:Label ID="lblOpExon" runat="server" Text="Label"></asp:Label>
+                <div class="form-group">0.00
                 </div>
                 <div class="form-group"><hr /></div>
-                <div class="form-group"><asp:Label ID="lblImporTot" runat="server" Text="Label"></asp:Label>
+                <div class="form-group"><?php echo $row_mos_curso['total'];?>
                 </div>
-                <div class="form-group"><asp:Label ID="lblTotDesc" runat="server" Text="Label"></asp:Label>
-                </div>
+               
              </div>
         </div>
-      
+       </div> 
         
      </div>
       
