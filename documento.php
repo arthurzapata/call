@@ -103,6 +103,8 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
 }
 }
 
+$item = 0;
+$total = 0;
 if (isset($_GET['nro'])) {
   $ser = $_GET['ser'];
   $nro = $_GET['nro'];
@@ -171,7 +173,7 @@ $row_mos_curso = mysql_fetch_assoc($mos_curso);
                     <div class="form-group">RUC N° 20468645381</div>
                     <div class="form-group"><?php echo $row_mos_curso['tipo_doc']=="01" ? 'FACTURA DE VENTA': 'BOLETA DE VENTA';?></div>
                     <div class="form-group">ELECTRÓNICA</div>
-                    <div class="form-group"><asp:Label ID="lblSerieNum" runat="server" Text=""></asp:Label></div>
+                    <div class="form-group"><?php echo $row_mos_curso['cn_serie'].'-'.$row_mos_curso['cn_numero'];?></div>
                 </div>    
             </div>
         </div>
@@ -248,20 +250,6 @@ $row_mos_curso = mysql_fetch_assoc($mos_curso);
                 <td align="right"><?php echo number_format($total,2);?></td>
                 
                 </tr>
-                <tr>
-                <td colspan="5" align="right"><strong>IGV (18%)</strong> </td>
-                <td align="right"><?php 
-                $igv = $total*0.18;
-                echo number_format($igv,2);?></td>
-                
-                </tr>
-                <tr>
-                <td colspan="5" align="right"><strong>TOTAL A PAGAR</strong></td>
-                <td align="right"><strong>
-                <?php
-                @$totalfinal = $total + $igv;
-                echo number_format($totalfinal,2);?></strong></td>
-                   <input type="hidden" id="total" name="total"  value="<?php echo @$totalfinal;?>"> </tr>
               </table>
               <?php 
               } // Show if recordset empty
