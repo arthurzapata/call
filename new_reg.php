@@ -181,18 +181,18 @@ $totalRows_mos_registro = mysql_num_rows($mos_registro);*/
 //
 
 if (isset($_POST['buscar'])) {
- 
+/* 
   mysql_select_db($database_conexion, $conexion);
   $query_mos_pd = "select cli_id,nro_doc,razon_social from cliente where nro_doc =" .$_POST['buscar']."";
   $mos_pd = mysql_query($query_mos_pd, $conexion) or die(mysql_error());
   $row_mos_pd = mysql_fetch_assoc($mos_pd);
   $totalRows_mos_pd = mysql_num_rows($mos_pd);
-/*
+*/
 mysql_select_db($database_conexion, $conexion);
 $query_mos_registro = "select * from cliente where nro_doc =" .$_POST['buscar']."";
 $mos_registro = mysql_query($query_mos_registro, $conexion) or die(mysql_error());
 $row_mos_registro = mysql_fetch_assoc($mos_registro);
-$totalRows_mos_registro = mysql_num_rows($mos_registro);*/
+$totalRows_mos_registro = mysql_num_rows($mos_registro);
 }
 //
 
@@ -477,7 +477,7 @@ $correo = $row_mos_config['conf_correo'];//'informes@reinademipromo.com'
                                 
                    
                   <div class="box-header"> 
-                  <h3 class="box-title"><?php echo $row_mos_registro['cliente'].' ! ' .$row_mos_registro['reg_codigo'];?></h3>
+                  <h3 class="box-title">Nuevo Registro</h3>
                   </div>
                    
                   <div class="box-body">
@@ -536,7 +536,7 @@ $correo = $row_mos_config['conf_correo'];//'informes@reinademipromo.com'
                  <div class="col-md-12">
                  <div class="form-group">Observaciones:
                  <textarea class="form-control" name="reg_observaciones" cols="50" rows="4">
-                 
+
                  </textarea> 
                              </div>
                  </div>
@@ -564,18 +564,18 @@ $correo = $row_mos_config['conf_correo'];//'informes@reinademipromo.com'
       <div class="row">
       	<div class="col-lg-9 col-md-9">
         		<div class="row">
-                	<div class="col-md-6">
+                	<div class="col-md-12">
                             <div class="form-group">Apellidos:
                             <div class="input-group">
                                   <div class="input-group-addon">
                                      <i class="fa fa-user"></i>
                                   </div>
-                               <input type="text" name="reg_apellidos" value="<?php echo htmlentities($row_mos_registro['reg_apellidos'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
+                               <input type="text" name="reg_apellidos" value="<?php echo htmlentities($row_mos_registro['razon_social'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
                              	</div>
                              </div>
                     </div>
 
-                	<div class="col-md-6">          
+                	<!--<div class="col-md-6">          
                               <div class="form-group">Nombres:
                               <div class="input-group">
                                   <div class="input-group-addon">
@@ -584,7 +584,7 @@ $correo = $row_mos_config['conf_correo'];//'informes@reinademipromo.com'
                                <input type="text" name="reg_nombres" value="<?php echo htmlentities($row_mos_registro['reg_nombres'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
                              	</div>
                              </div>
-                    </div>
+                    </div>-->
                  </div><!--edn ro -->   
                  <div class="row">
                 	<div class="col-md-6"> 
@@ -598,7 +598,7 @@ $correo = $row_mos_config['conf_correo'];//'informes@reinademipromo.com'
                                   <?php 
 do {  
 ?>
-                                  <option value="<?php echo $row_mos_curso['pro_id']?>" <?php if (!(strcmp($row_mos_curso['pro_id'], htmlentities($row_mos_registro['cur_id'], ENT_COMPAT, 'UTF-8')))) {echo "SELECTED";} ?>><?php echo $row_mos_curso['pro_descripcion']?></option>
+                                  <option value="<?php echo $row_mos_curso['pro_id']?>"<?php echo $row_mos_curso['pro_descripcion']?></option>
                                   <?php
 } while ($row_mos_curso = mysql_fetch_assoc($mos_curso));
 ?>
@@ -633,19 +633,19 @@ do {
                                   <div class="input-group-addon">
                                      <i class="fa fa-archive"></i>
                                   </div>
-                               <input type="text" name="reg_formacion" value="<?php echo htmlentities($row_mos_registro['reg_formacion'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
+                               <input type="text" name="reg_formacion" value="<?php echo htmlentities($row_mos_registro['nro_doc'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
                              </div></div>
                     </div>
                 
                 
                 
                 	<div class="col-md-6">         
-                              <div class="form-group">Pais:
+                              <div class="form-group">Direccion:
                               <div class="input-group">
                                   <div class="input-group-addon">
                                      <i class="fa fa-flag"></i>
                                   </div>
-                               <input type="text" name="reg_pais" value="<?php echo htmlentities($row_mos_registro['reg_pais'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
+                               <input type="text" name="reg_pais" value="<?php echo htmlentities($row_mos_registro['direccion'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
                              </div></div>
                     </div>
                  </div>
@@ -658,7 +658,7 @@ do {
                                   <div class="input-group-addon">
                                      <i class="fa fa-envelope"></i>
                                   </div>
-                               <input type="email" name="reg_email" value="<?php echo htmlentities($row_mos_registro['reg_email'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
+                               <input type="email" name="reg_email" value="<?php echo htmlentities($row_mos_registro['email'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
                              </div>
                              </div>
                      </div>
@@ -669,7 +669,7 @@ do {
                                   <div class="input-group-addon">
                                      <i class="fa fa-phone-square"></i>
                                   </div>
-                               <input type="text" id="reg_telefono" name="reg_telefono" value="<?php echo htmlentities($row_mos_registro['reg_telefono'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
+                               <input type="text" id="reg_telefono" name="reg_telefono" value="<?php echo htmlentities($row_mos_registro['telefono'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
                              </div>
                              </div>
                      </div>

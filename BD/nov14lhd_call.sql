@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-06-2017 a las 22:19:26
+-- Tiempo de generación: 22-06-2017 a las 04:32:16
 -- Versión del servidor: 5.6.21
 -- Versión de PHP: 5.6.3
 
@@ -157,8 +157,8 @@ CREATE TABLE IF NOT EXISTS `call_pedido` (
 --
 
 INSERT INTO `call_pedido` (`nro_pedido`, `cli_id`, `ped_estado`, `cc_vendedor`, `total`, `fecha_reg`, `fecha_ped`, `requerimiento`) VALUES
-(1, 1, 1, 1, '1000.00', '2017-06-15 14:19:27', '2017-06-15 00:00:00', NULL),
-(2, 1, 1, 1, '50.00', '2017-06-15 14:19:27', '2017-06-08 00:00:00', NULL);
+(1, 1, 1, 14, '1000.00', '2017-06-21 23:06:15', '2017-06-15 00:00:00', NULL),
+(2, 1, 1, 16, '50.00', '2017-06-21 23:06:18', '2017-06-08 00:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -313,7 +313,7 @@ CREATE TABLE IF NOT EXISTS `call_visitas` (
   `usu_id` int(11) NOT NULL,
   `fecha_reg` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `motivo` text COLLATE utf8_spanish_ci NOT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `call_visitas`
@@ -324,7 +324,9 @@ INSERT INTO `call_visitas` (`vis_id`, `vis_fecha`, `vis_lugar`, `vis_cli`, `vis_
 (2, '2017-06-01', 'LOS OLIVOS', 1, 'OFICINA', '00:00:00', '00:00:00', 14, '2017-06-21 05:25:25', ''),
 (3, '2017-06-02', 'san isidro', 4, 'opoerador', '12:00:00', '15:00:00', 16, '2017-06-21 05:21:49', 'kkkkkkkkkkk'),
 (4, '2017-06-02', 'san isidro', 2, 'opoerador', '12:00:00', '15:00:00', 14, '2017-06-21 05:22:00', ''),
-(8, '2017-06-05', 'MIRAFLORES JR JOSE PARDO', 2, 'LOCAL', '15:00:00', '16:00:00', 1, '2017-06-21 19:23:53', 'ddddddddddddddd');
+(8, '2017-06-05', 'MIRAFLORES JR JOSE PARDO', 2, 'LOCAL', '15:00:00', '16:00:00', 1, '2017-06-21 19:23:53', 'ddddddddddddddd'),
+(9, '2017-06-07', 'OVALO HIGUERETA - SURCO', 2, 'LOCAL', '15:00:00', '17:00:00', 15, '2017-06-21 22:06:46', 'SE LLEVARA COTIZACIONES Y MOSTRARA LOS SERVICIOS'),
+(10, '2017-06-08', 'MIRAFLORES JR JOSE PARDO', 1, 'LOCAL', '15:00:00', '16:00:00', 13, '2017-06-21 22:58:55', 'www');
 
 -- --------------------------------------------------------
 
@@ -375,11 +377,14 @@ CREATE TABLE IF NOT EXISTS `documento` (
 --
 
 INSERT INTO `documento` (`cn_serie`, `cn_numero`, `tipo_doc`, `nro_pedido`, `cc_cliente`, `cc_vta`, `cc_moneda`, `fecha_reg`, `cc_vendedor`, `total`, `fecha_ped`) VALUES
-('F011', '00001245', '01', 1, 10, 1, '01', '2017-06-21 00:40:06', 14, '118.00', '2017-06-01'),
-('F021', '00001245', '01', 22, 22, 2, '01', '2017-06-21 00:40:09', 14, '338.00', '2017-06-02'),
-('F021', '0009898', '01', 3232, 11, 2, '01', '2017-06-21 00:44:06', 16, '1180.00', '2017-06-02'),
-('F021', '00031245', '01', 354554, 1, 2, '01', '2017-06-21 00:42:25', 14, '600.00', '2017-06-01'),
-('F001', '121211', '01', 4545, 1, 1, '01', '2017-06-21 00:45:27', 16, '100.00', '2017-06-03');
+('F011', '0000001', '01', 1, 10, 1, '01', '2017-06-22 00:11:26', 14, '118.00', '2017-06-01'),
+('F021', '0000002', '01', 22, 22, 2, '01', '2017-06-22 00:11:23', 14, '338.00', '2017-06-02'),
+('F021', '0000003', '01', 3232, 11, 2, '01', '2017-06-22 00:11:19', 16, '1180.00', '2017-06-02'),
+('F021', '0000004', '01', 354554, 1, 2, '01', '2017-06-22 00:11:17', 14, '600.00', '2017-06-01'),
+('F001', '0000005', '01', 4545, 1, 1, '01', '2017-06-22 00:11:12', 16, '100.00', '2017-06-03'),
+('F011', '0000007', '1', 1, 1, 1, '01', '2017-06-22 00:12:12', 15, '1298.00', '2017-06-21'),
+('F011', '0000006', '1', 1, 1, 1, '01', '2017-06-22 00:09:15', 14, NULL, '2017-06-14'),
+('F011', '0000008', '01', 1, 1, 1, '01', '2017-06-22 00:16:49', 13, '1298.00', '2017-06-20');
 
 -- --------------------------------------------------------
 
@@ -593,7 +598,7 @@ MODIFY `usu_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
 -- AUTO_INCREMENT de la tabla `call_visitas`
 --
 ALTER TABLE `call_visitas`
-MODIFY `vis_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+MODIFY `vis_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT de la tabla `cliente`
 --
