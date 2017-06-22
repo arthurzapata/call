@@ -152,11 +152,10 @@ $row_mos_curso = mysql_fetch_assoc($mos_curso);
         <div class="row">
            <div class="col-lg-6 col-md-6">
                 <div class="form-group">
-                   <!-- <img src="img/comacsa.png" height="130" width="360" />-->
-                    <asp:Image ID="Image1" runat="server" height="130" width="360"/>
+                   <img src="img/logo.png" height="100" width="340" />
                 </div>
                 <div class="form-group">
-                   <strong>ZANMARTIN SAC</strong>
+                   <strong>ZANMARKETING CONSULTORA SAC</strong>
                 </div>
                 <div class="form-group">
                     Av. Manuel Villaran N° 1201 - 302
@@ -164,7 +163,6 @@ $row_mos_curso = mysql_fetch_assoc($mos_curso);
                 <div class="form-group">
                     LIMA - LIMA - LIMA
                 </div>
-                <br />
             </div>
             <div class="col-lg-1 col-md-1">
             </div>
