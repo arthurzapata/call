@@ -113,6 +113,13 @@ $query_mos_curso = "SELECT cn_serie,cn_numero,tipo_doc,nro_pedido,c.nro_doc,c.ra
 left join call_usuario u on d.cc_vendedor = u.usu_id where cn_serie='".$ser."' and cn_numero='".$nro."'";
 $mos_curso = mysql_query($query_mos_curso, $conexion) or die(mysql_error());
 $row_mos_curso = mysql_fetch_assoc($mos_curso);
+
+
+  $query_mos_pd = "SELECT d.pro_id, p.pro_descripcion, cant, precio, importe FROM documento_det d LEFT JOIN producto p on d.pro_id = p.pro_id
+  where cn_serie='".$ser."' and cn_numero='".$nro."'";
+  $mos_pd = mysql_query($query_mos_pd, $conexion) or die(mysql_error());
+  $row_mos_pd = mysql_fetch_assoc($mos_pd);
+  $totalRows_mos_pd = mysql_num_rows($mos_pd);
 ?>
 <!DOCTYPE html>
 <html class="bg-black">
@@ -212,38 +219,56 @@ $row_mos_curso = mysql_fetch_assoc($mos_curso);
         </div>
         <div class ="row">
             <div class="col-lg-12 col-md-12">
-                <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False"  CssClass="table table-striped table-hover table-condensed tablesorter" >
-                <Columns>
-                     <asp:BoundField DataField="numeroOrdenItem"  HeaderText="Item" >
-                         <ItemStyle Wrap="False" HorizontalAlign="Center" />
-                     </asp:BoundField>
-                     <asp:BoundField DataField="codigoproducto"  HeaderText="Código" >
-                         <ItemStyle Wrap="False" HorizontalAlign="Center" />
-                     </asp:BoundField>
-                     <asp:BoundField DataField="descripcion"  HeaderText="Descripción" >
-                         <ItemStyle Wrap="False" />
-                     </asp:BoundField>
-                     <asp:BoundField DataField="unidadMedida"  HeaderText="Und." >
-                         <ItemStyle Wrap="False" HorizontalAlign="Center" />
-                     </asp:BoundField>
-                     <asp:BoundField DataField="cantidad"  HeaderText="Cant." >
-                         <ItemStyle Wrap="False" HorizontalAlign="Right" />
-                     </asp:BoundField>
-                       <asp:BoundField DataField="importeUnitarioSinImpuesto"  HeaderText="V. Uni" DataFormatString="{0:N}">
-                         <ItemStyle Wrap="False" HorizontalAlign="Right" />
-                     </asp:BoundField>
-                   <asp:BoundField DataField="importeUnitarioConImpuesto"  HeaderText="P. Uni" DataFormatString="{0:N}" >
-                         <ItemStyle Wrap="False" HorizontalAlign="Right" />
-                     </asp:BoundField>
-                     <asp:BoundField DataField="importedescuento"  HeaderText="Desc." DataFormatString="{0:N}">
-                         <ItemStyle Wrap="False" HorizontalAlign="Right" />
-                     </asp:BoundField>
-                     <asp:BoundField DataField="importeTotalSinImpuesto"  HeaderText="Valor Venta"  DataFormatString="{0:N}" >
-                         <ItemStyle Wrap="False" HorizontalAlign="Right" />
-                     </asp:BoundField>
-                </Columns>
-           
-            </asp:GridView>
+             <?php if ($totalRows_mos_pd !== 0) { ?>
+                      <table class="table table-bordered table-striped table-hover table-condensed tablesorter">
+              <tr>
+                <td><strong>Item</strong></td>
+                <td><strong>Código</strong></td>
+                <td><strong>Producto o Servicio</strong></td>
+                <td><strong>Cant</strong></td>
+                <td><strong>Precio</strong></td>
+                <td><strong>Importe</strong></td>
+              <!--  <td align="center"><strong>Acciones</strong></td>-->
+              </tr>
+              <?php 
+  
+              do {
+              $item++;
+              $total = $total + $row_mos_pd['importe'];
+              ?>
+                <tr>
+                <td><?php echo $item; ?></td>
+                <td><input name="KEY_PROD[]" type="hidden" id="KEY_PROD[]" value="<?php echo $prod[0]['pro_id'];?>"><?php echo $row_mos_pd['pro_id']; ?></td>
+                <td><?php echo $row_mos_pd['pro_descripcion'];?></td>
+                <td><?php echo $row_mos_pd['cant'];?></td>
+                <td align="right"><?php echo $row_mos_pd['precio']; ?></td>
+                <td align="right"><?php echo $row_mos_pd['importe'];?></td>
+                </tr>
+                <?php } while ($row_mos_pd = mysql_fetch_assoc($mos_pd)); ?>
+                <tr>
+                <td colspan="5" align="right"><strong>SUB TOTAL</strong></td>
+                <td align="right"><?php echo number_format($total,2);?></td>
+                
+                </tr>
+                <tr>
+                <td colspan="5" align="right"><strong>IGV (18%)</strong> </td>
+                <td align="right"><?php 
+                $igv = $total*0.18;
+                echo number_format($igv,2);?></td>
+                
+                </tr>
+                <tr>
+                <td colspan="5" align="right"><strong>TOTAL A PAGAR</strong></td>
+                <td align="right"><strong>
+                <?php
+                @$totalfinal = $total + $igv;
+                echo number_format($totalfinal,2);?></strong></td>
+                   <input type="hidden" id="total" name="total"  value="<?php echo @$totalfinal;?>"> </tr>
+              </table>
+              <?php 
+              } // Show if recordset empty
+               ?>
+          </div>
             </div>
         </div> 
 

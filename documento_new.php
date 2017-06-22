@@ -212,8 +212,8 @@ $idped = $row_nro_ped['nroped'];
   $fecha_remitido = $_POST['fecha_ped'];
   $fechaconver = implode('-',array_reverse(explode('-', $fecha_remitido)));
 
-  	$insertSQL = sprintf("INSERT INTO documento (cn_serie, cn_numero,tipo_doc, nro_pedido, cc_cliente, cc_vta, cc_moneda, cc_vendedor, total, fecha_ped) 
-  						VALUES (%s, %s, %s,%s, %s, %s, %s, %s, %s, %s)",
+  	$insertSQL = sprintf("INSERT INTO documento (cn_serie, cn_numero,tipo_doc, nro_pedido, cc_cliente, cc_vta, cc_moneda, cc_vendedor,igv, total, fecha_ped) 
+  						VALUES (%s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s)",
                           GetSQLValueString($_POST['serie'], "text"), 
                        	  GetSQLValueString($idped, "text"), //numero
                        	  GetSQLValueString($_POST['tipo_doc'], "text"),
@@ -222,6 +222,7 @@ $idped = $row_nro_ped['nroped'];
 						              GetSQLValueString(1, "text"),// 0 PEDIDO EN ESPERAAA 1 PEDIDO CANCELADO
                        	  GetSQLValueString('01', "text"),
 						              GetSQLValueString($_POST['cc_vendedor'], "int"),
+                          GetSQLValueString($_POST['igv'],"double"),
                           GetSQLValueString($_POST['total'],"double"),
 						              GetSQLValueString($fechaconver,"date"));
   mysql_select_db($database_conexion, $conexion);
@@ -529,7 +530,7 @@ $idped = $row_nro_ped['nroped'];
 								<td align="right"><?php 
 								$igv = $total*0.18;
 								echo number_format($igv,2);?></td>
-								
+								<input type="hidden" id="igv" name="igv"  value="<?php echo @$igv;?>"> 
 							  </tr>
 							  <tr>
 								<td colspan="5" align="right"><strong>TOTAL A PAGAR</strong></td>
