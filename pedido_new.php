@@ -205,8 +205,6 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
   /*$producto = isset($_POST['KEY_PROD']) ? $_POST['KEY_PROD'] : NULL;
   for ($i=0;$i<sizeof($producto);$i++){
 ;*/
-  
-
   $query = sprintf("INSERT INTO call_pedido_det (nro_pedido, pro_id,cant,precio, importe) VALUES (%s, %s, %s, %s, %s)",
              GetSQLValueString($idped, "int"),
 					   GetSQLValueString($_POST['pro_id'], "int"),

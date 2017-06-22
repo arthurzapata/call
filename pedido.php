@@ -131,8 +131,9 @@ if (isset($_GET['pageNum_mos_curso'])) {
 $startRow_mos_curso = $pageNum_mos_curso * $maxRows_mos_curso;
 
 mysql_select_db($database_conexion, $conexion);
-$query_mos_curso = "SELECT cn_serie,cn_numero,tipo_doc,nro_pedido,c.nro_doc,c.razon_social,cc_vta,cc_moneda,d.fecha_reg,u.usu_nombre, total FROM documento d left join cliente c on d.cc_cliente =c.cli_id 
-left join call_usuario u on d.cc_vendedor = u.usu_id order by d.fecha_reg desc";
+$query_mos_curso = "SELECT nro_pedido,c.nro_doc,c.razon_social,d.fecha_ped,u.usu_nombre, total FROM call_pedido d 
+left join cliente c on d.cli_id =c.cli_id 
+left join call_usuario u on d.cc_vendedor = u.usu_id order by nro_pedido desc";
 $query_limit_mos_curso = sprintf("%s LIMIT %d, %d", $query_mos_curso, $startRow_mos_curso, $maxRows_mos_curso);
 $mos_curso = mysql_query($query_limit_mos_curso, $conexion) or die(mysql_error());
 $row_mos_curso = mysql_fetch_assoc($mos_curso);
@@ -311,17 +312,17 @@ if (isset($_GET['n']))
                           <a class="btn btn-primary" href="pedido_new.php"><i class="fa fa-pencil"></i> Agregar</a>
             </div>
                     <div class="col-sm-6 search-form">
-                            <form name="formb" id="formb" action="" method="post" class="text-right">
+                      <!--      <form name="formb" id="formb" action="" method="post" class="text-right">
                                   <div class="input-group">                                          
                                      <input type="text" name="buscar" class="form-control" placeholder="Buscar ...">
                                  <div class="input-group-btn">
                                  <button type="submit" name="q" class="btn btn btn-primary"><i class="fa fa-search"></i></button>
                                  </div>
                         </div>                                                     
-                        </form>
+                        </form> --> 
                         </div>
-                   </div>     
-
+                 </div>     
+                  
                        <div class="box-body table-responsive no-padding">
    <?php if ($totalRows_mos_curso !== 0) { 
               
@@ -329,9 +330,7 @@ if (isset($_GET['n']))
   <table class="table table-bordered table-striped table-hover table-condensed tablesorter">
 
     <tr>
-      <td><strong>Documento</strong></td>
-      <td><strong>Tipo Doc</strong></td>
-      <td><strong>Pedido</strong></td>
+      <td><strong>N° Pedido</strong></td>
       <td><strong>Cliente</strong></td>
       <td><strong>Vendedor</strong></td>
       <td><strong>Fecha</strong></td>
@@ -341,12 +340,10 @@ if (isset($_GET['n']))
     </tr>
     <?php do { ?>
       <tr>
-        <td><?php echo $row_mos_curso['cn_serie'].'-'.$row_mos_curso['cn_numero']; ?></td>
-        <td><?php echo $row_mos_curso['tipo_doc'] == '01'?  'FACTURA' : 'BOLETA'; ?></td>
-        <td><?php echo $row_mos_curso['nro_pedido'];?></td>
+        <td><?php echo $row_mos_curso['nro_pedido']; ?></td>
         <td><?php echo $row_mos_curso['nro_doc'].'-'.$row_mos_curso['razon_social']; ?></td>
         <td><?php echo $row_mos_curso['usu_nombre'];?></td>
-        <td><?php echo $row_mos_curso['fecha_reg'];?></td>
+        <td><?php echo $row_mos_curso['fecha_ped'];?></td>
         <td align="right"><?php echo $row_mos_curso['total']; ?></td>
        <!--- <td><?php echo '...'; ?></td>
         <td align="center"><?php if($row_mos_curso['cur_activo']==1)
