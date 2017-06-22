@@ -160,6 +160,69 @@ if (isset($_GET['n']))
      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
              <b>Alerta !</b>'.$var.'!!  </div>';
 }
+/////////////////22-06-2017
+//// nuevo pedido
+$editFormAction = $_SERVER['PHP_SELF'];
+if (isset($_SERVER['QUERY_STRING'])) {
+  $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
+}
+
+if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
+	//
+	date_default_timezone_set('America/Lima');
+	$fecha = date("Y-m-d");
+	$hora = date("H:i:s");
+//
+mysql_select_db($database_conexion, $conexion);
+$query_nro_ped = "SELECT LPAD(MAX(nro_pedido) + 1,7,'0') as nroped FROM call_pedido";
+$nro_ped = mysql_query($query_nro_ped, $conexion) or die(mysql_error());
+$row_nro_ped = mysql_fetch_assoc($nro_ped);
+$totalRows_nro_ped = mysql_num_rows($nro_ped);
+  
+if ($row_nro_ped['nroped']== "") 
+{
+$idped = '0000001';}
+else
+{
+$idped = $row_nro_ped['nroped'];
+}
+
+  $fecha_remitido = $_POST['fecha_ped'];
+  $fechaconver = implode('-',array_reverse(explode('-', $fecha_remitido)));
+  
+  $insertSQL = sprintf("INSERT INTO call_pedido (nro_pedido, cli_id,ped_estado, cc_vendedor, total,  fecha_ped, requerimiento) 
+  						VALUES (%s, %s, %s,%s, %s, %s, %s)",
+                       	  GetSQLValueString($idped, "text"), //numero
+						  GetSQLValueString($_POST['cli_id'], "text"), 
+                       	  GetSQLValueString(1, "int"),
+					   	  GetSQLValueString($_POST['cc_vendedor'], "int"),
+						  GetSQLValueString($_POST['total'], "decimal"),
+						  GetSQLValueString($fechaconver,"date"),
+						  GetSQLValueString($_POST['requerimiento'], "text"));
+  mysql_select_db($database_conexion, $conexion);
+  $Result1 = mysql_query($insertSQL, $conexion) or die(mysql_error());
+  //detalle
+  /*$producto = isset($_POST['KEY_PROD']) ? $_POST['KEY_PROD'] : NULL;
+  for ($i=0;$i<sizeof($producto);$i++){
+
+  $query = sprintf("INSERT INTO det_pedido (id_pedido, id_plat,cantidad, importe) VALUES (%s, %s, %s, %s)",
+                       GetSQLValueString($idped, "int"),
+					   GetSQLValueString($producto[$i], "int"),
+					   GetSQLValueString($_POST['cantidad'], "int"),
+					   GetSQLValueString($_POST['importe'], "double"));
+ 	mysql_select_db($database_conexion, $conexion);
+  	$Result2 = mysql_query($query, $conexion) or die(mysql_error());*/
+
+	$mensaje = 'Pedido Registrado Correctamente.';
+  	//
+    $insertGoTo = "pedido.php?n=$mensaje";
+  	if (isset($_SERVER['QUERY_STRING'])) {
+    $insertGoTo .= (strpos($insertGoTo, '?')) ? "&" : "?";
+    $insertGoTo .= $_SERVER['QUERY_STRING'];
+  	}
+  	header(sprintf("Location: %s", $insertGoTo));
+ 	//}  
+}
 ?>
 <!DOCTYPE html>
 <html>
