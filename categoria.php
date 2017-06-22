@@ -161,11 +161,11 @@ $query_mos_estado = "SELECT e.est_id,  r.emp_id,  COUNT(r.est_id) AS cant,  e.es
 $mos_estado = mysql_query($query_mos_estado, $conexion) or die(mysql_error());
 $row_mos_estado = mysql_fetch_assoc($mos_estado);
 //Productos
-mysql_select_db($database_conexion, $conexion);
+/*mysql_select_db($database_conexion, $conexion);
 $query_mos_curso = "SELECT * FROM call_curso where cur_activo = 1 order by cur_nombre asc";
 $mos_curso = mysql_query($query_mos_curso, $conexion) or die(mysql_error());
 $row_mos_curso = mysql_fetch_assoc($mos_curso);
-//
+*/
 if($_GET['es'])
 {
 	$idestado = $_GET['es'];
@@ -180,15 +180,15 @@ $startRow_mos_registro = $pageNum_mos_registro * $maxRows_mos_registro;
 
 mysql_select_db($database_conexion, $conexion);
 if ($perid == 3)//super admin
-$query_mos_registro = "SELECT reg_id,reg_codigo,DATE_FORMAT(reg_fecha,'%e/%m/%Y')as reg_fecha,r.est_id,r.cur_id,DATE_FORMAT(reg_fechareg,'%e/%m/%Y') as reg_fechareg, r.usu_id,  CONCAT(IFNULL(reg_apellidos,''),' ',IFNULL(reg_nombres,'')) AS cliente,reg_formacion, reg_observaciones,reg_ciudad,reg_pais,reg_email,reg_telefono,e.est_color,c.cur_nombre,u.usu_nombre	FROM call_registro r LEFT JOIN call_estado e ON r.est_id = e.est_id 	LEFT JOIN call_curso c ON r.cur_id = c.cur_id LEFT join call_usuario u on r.usu_id = u.usu_id where r.est_id=".$idestado." order by reg_id desc";
+$query_mos_registro = "SELECT reg_id,reg_codigo,DATE_FORMAT(reg_fecha,'%e/%m/%Y')as reg_fecha,r.est_id,r.cur_id,DATE_FORMAT(reg_fechareg,'%e/%m/%Y') as reg_fechareg, r.usu_id,  CONCAT(IFNULL(reg_apellidos,''),' ',IFNULL(reg_nombres,'')) AS cliente,reg_formacion, reg_observaciones,reg_ciudad,reg_pais,reg_email,reg_telefono,e.est_color,c.pro_descripcion,u.usu_nombre	FROM call_registro r LEFT JOIN call_estado e ON r.est_id = e.est_id 	LEFT JOIN producto c ON r.cur_id = c.pro_id LEFT join call_usuario u on r.usu_id = u.usu_id where r.est_id=".$idestado." order by reg_id desc";
 elseif ($perid == 4)//admin
-  $query_mos_registro = "SELECT reg_id,reg_codigo,DATE_FORMAT(reg_fecha,'%e/%m/%Y')as reg_fecha,r.est_id,r.cur_id,DATE_FORMAT(reg_fechareg,'%e/%m/%Y') as reg_fechareg, r.usu_id,  CONCAT(IFNULL(reg_apellidos,''),' ',IFNULL(reg_nombres,'')) AS cliente,reg_formacion, reg_observaciones,reg_ciudad,reg_pais,reg_email,reg_telefono,e.est_color,c.cur_nombre,u.usu_nombre FROM call_registro r LEFT JOIN call_estado e ON r.est_id = e.est_id   LEFT JOIN call_curso c ON r.cur_id = c.cur_id LEFT join call_usuario u on r.usu_id = u.usu_id
+  $query_mos_registro = "SELECT reg_id,reg_codigo,DATE_FORMAT(reg_fecha,'%e/%m/%Y')as reg_fecha,r.est_id,r.cur_id,DATE_FORMAT(reg_fechareg,'%e/%m/%Y') as reg_fechareg, r.usu_id,  CONCAT(IFNULL(reg_apellidos,''),' ',IFNULL(reg_nombres,'')) AS cliente,reg_formacion, reg_observaciones,reg_ciudad,reg_pais,reg_email,reg_telefono,e.est_color,c.pro_descripcion,u.usu_nombre FROM call_registro r LEFT JOIN call_estado e ON r.est_id = e.est_id   LEFT JOIN producto c ON r.cur_id = c.pro_id LEFT join call_usuario u on r.usu_id = u.usu_id
     where r.est_id=".$idestado." AND r.emp_id = ".$empid." order by reg_id desc";
 elseif ($perid == 1) 
-  $query_mos_registro = "SELECT reg_id,reg_codigo,DATE_FORMAT(reg_fecha,'%e/%m/%Y')as reg_fecha,r.est_id,r.cur_id,DATE_FORMAT(reg_fechareg,'%e/%m/%Y') as reg_fechareg, r.usu_id,  CONCAT(IFNULL(reg_apellidos,''),' ',IFNULL(reg_nombres,'')) AS cliente,reg_formacion, reg_observaciones,reg_ciudad,reg_pais,reg_email,reg_telefono,e.est_color,c.cur_nombre,u.usu_nombre	FROM call_registro r LEFT JOIN call_estado e ON r.est_id = e.est_id 	LEFT JOIN call_curso c ON r.cur_id = c.cur_id LEFT join call_usuario u on r.usu_id = u.usu_id 
+  $query_mos_registro = "SELECT reg_id,reg_codigo,DATE_FORMAT(reg_fecha,'%e/%m/%Y')as reg_fecha,r.est_id,r.cur_id,DATE_FORMAT(reg_fechareg,'%e/%m/%Y') as reg_fechareg, r.usu_id,  CONCAT(IFNULL(reg_apellidos,''),' ',IFNULL(reg_nombres,'')) AS cliente,reg_formacion, reg_observaciones,reg_ciudad,reg_pais,reg_email,reg_telefono,e.est_color,c.pro_descripcion,u.usu_nombre	FROM call_registro r LEFT JOIN call_estado e ON r.est_id = e.est_id 	LEFT JOIN producto c ON r.cur_id = c.pro_id LEFT join call_usuario u on r.usu_id = u.usu_id 
     where r.est_id=".$idestado." AND r.emp_id = ".$empid." and u.cor_id =".$usuid." order by reg_id desc";
 else
-$query_mos_registro = "SELECT reg_id,reg_codigo,DATE_FORMAT(reg_fecha,'%e/%m/%Y')as reg_fecha,r.est_id,r.cur_id,DATE_FORMAT(reg_fechareg,'%e/%m/%Y') as reg_fechareg, r.usu_id,  CONCAT(IFNULL(reg_apellidos,''),' ',IFNULL(reg_nombres,'')) AS cliente,reg_formacion, reg_observaciones,reg_ciudad,reg_pais,reg_email,reg_telefono,e.est_color,c.cur_nombre,u.usu_nombre FROM call_registro r LEFT JOIN call_estado e ON r.est_id = e.est_id  LEFT JOIN call_curso c ON r.cur_id = c.cur_id LEFT join call_usuario u on r.usu_id = u.usu_id
+$query_mos_registro = "SELECT reg_id,reg_codigo,DATE_FORMAT(reg_fecha,'%e/%m/%Y')as reg_fecha,r.est_id,r.cur_id,DATE_FORMAT(reg_fechareg,'%e/%m/%Y') as reg_fechareg, r.usu_id,  CONCAT(IFNULL(reg_apellidos,''),' ',IFNULL(reg_nombres,'')) AS cliente,reg_formacion, reg_observaciones,reg_ciudad,reg_pais,reg_email,reg_telefono,e.est_color,c.pro_descripcion,u.usu_nombre FROM call_registro r LEFT JOIN call_estado e ON r.est_id = e.est_id  LEFT JOIN producto c ON r.cur_id = c.pro_id LEFT join call_usuario u on r.usu_id = u.usu_id
 where r.est_id=".$idestado." AND r.usu_id =".$usuid." order by reg_id desc";
 $query_limit_mos_registro = sprintf("%s LIMIT %d, %d", $query_mos_registro, $startRow_mos_registro, $maxRows_mos_registro);
 $mos_registro = mysql_query($query_limit_mos_registro, $conexion) or die(mysql_error());
@@ -224,14 +224,14 @@ if(isset($_POST['buscar']))
 mysql_select_db($database_conexion, $conexion);
 if ($perid == 1 or $perid == 4)//admin
 {
-$query_mos_registro = "SELECT reg_id,reg_codigo,DATE_FORMAT(reg_fecha,'%e/%m/%Y')as reg_fecha,r.est_id,r.cur_id,DATE_FORMAT(reg_fechareg,'%e/%m/%Y') as reg_fechareg, r.usu_id,  CONCAT(IFNULL(reg_apellidos,''),' ',IFNULL(reg_nombres,'')) AS cliente,reg_formacion, reg_observaciones,reg_ciudad,reg_pais,reg_email,reg_telefono,e.est_color,c.cur_nombre,u.usu_nombre
-FROM call_registro r INNER JOIN call_estado e ON r.est_id = e.est_id INNER JOIN call_curso c ON r.cur_id = c.cur_id inner join call_usuario u on r.usu_id = u.usu_id
+$query_mos_registro = "SELECT reg_id,reg_codigo,DATE_FORMAT(reg_fecha,'%e/%m/%Y')as reg_fecha,r.est_id,r.cur_id,DATE_FORMAT(reg_fechareg,'%e/%m/%Y') as reg_fechareg, r.usu_id,  CONCAT(IFNULL(reg_apellidos,''),' ',IFNULL(reg_nombres,'')) AS cliente,reg_formacion, reg_observaciones,reg_ciudad,reg_pais,reg_email,reg_telefono,e.est_color,c.pro_descripcion,u.usu_nombre
+FROM call_registro r INNER JOIN call_estado e ON r.est_id = e.est_id INNER JOIN producto c ON r.cur_id = c.pro_id inner join call_usuario u on r.usu_id = u.usu_id
 WHERE reg_apellidos LIKE '%".$_POST['buscar']."%' and r.est_id=".$idestado." AND r.emp_id = ".$empid." order by reg_id desc";
 }
 else
 {
-$query_mos_registro = "SELECT reg_id,reg_codigo,DATE_FORMAT(reg_fecha,'%e/%m/%Y')as reg_fecha,r.est_id,r.cur_id,DATE_FORMAT(reg_fechareg,'%e/%m/%Y') as reg_fechareg, r.usu_id,  CONCAT(IFNULL(reg_apellidos,''),' ',IFNULL(reg_nombres,'')) AS cliente,reg_formacion, reg_observaciones,reg_ciudad,reg_pais,reg_email,reg_telefono,e.est_color,c.cur_nombre,u.usu_nombre
-FROM call_registro r INNER JOIN call_estado e ON r.est_id = e.est_id INNER JOIN call_curso c ON r.cur_id = c.cur_id inner join call_usuario u on r.usu_id = u.usu_id
+$query_mos_registro = "SELECT reg_id,reg_codigo,DATE_FORMAT(reg_fecha,'%e/%m/%Y')as reg_fecha,r.est_id,r.cur_id,DATE_FORMAT(reg_fechareg,'%e/%m/%Y') as reg_fechareg, r.usu_id,  CONCAT(IFNULL(reg_apellidos,''),' ',IFNULL(reg_nombres,'')) AS cliente,reg_formacion, reg_observaciones,reg_ciudad,reg_pais,reg_email,reg_telefono,e.est_color,c.pro_descripcion,u.usu_nombre
+FROM call_registro r INNER JOIN call_estado e ON r.est_id = e.est_id INNER JOIN producto c ON r.cur_id = c.pro_id inner join call_usuario u on r.usu_id = u.usu_id
 WHERE reg_apellidos LIKE '%".$_POST['buscar']."%' and r.est_id=".$idestado." AND r.usu_id = ".$usuid." order by reg_id desc";
 }
 $mos_registro = mysql_query($query_mos_registro, $conexion) or die(mysql_error());
@@ -635,7 +635,7 @@ if (isset($_GET['n']))
 		  	  <?php echo $row_mos_registro['cliente']; ?>
               </a>
           </td>
-          <td><?php echo $row_mos_registro['cur_nombre']; ?></td>
+          <td><?php echo $row_mos_registro['pro_descripcion']; ?></td>
           <td><?php echo $row_mos_registro['reg_telefono']; ?></td>
           <td><?php echo $row_mos_registro['usu_nombre']; ?></td>
           <td><?php echo $row_mos_registro['reg_observaciones']; ?></td>
@@ -783,7 +783,7 @@ if (isset($_GET['n']))
                           <?php 
 do {  
 ?>
-                          <option value="<?php echo $row_mos_curso['cur_id']?>" <?php if (!(strcmp($row_mos_curso['cur_id'], $row_mos_curso['cur_id']))) {echo "SELECTED";} ?>><?php echo $row_mos_curso['cur_nombre']?></option>
+                          <option value="<?php echo $row_mos_curso['pro_id']?>" <?php if (!(strcmp($row_mos_curso['pro_id'], $row_mos_curso['pro_id']))) {echo "SELECTED";} ?>><?php echo $row_mos_curso['pro_descripcion']?></option>
                           <?php
 } while ($row_mos_curso = mysql_fetch_assoc($mos_curso));
 ?>

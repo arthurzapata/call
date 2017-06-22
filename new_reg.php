@@ -122,7 +122,9 @@ $empid = $row_mos_usuario['emp_id'];
 mysql_select_db($database_conexion, $conexion);
 if ($perid == 3)//super admin
 $query_mos_vertodos = "SELECT COUNT(*) AS cant FROM call_registro";
-elseif ($perid == 1)//admin
+elseif ($perid == 1)//coor
+$query_mos_vertodos = "SELECT COUNT(*) AS cant FROM call_registro r inner join call_usuario u ON r.usu_id = u.usu_id where emp_id = ".$empid." and u.cor_id =".$usuid."";
+elseif ($perid == 4)//admin
 $query_mos_vertodos = "SELECT COUNT(*) AS cant FROM call_registro where emp_id = ".$empid."";
 else
 $query_mos_vertodos = "SELECT COUNT(*) AS cant FROM call_registro where usu_id = ".$usuid."";
@@ -133,63 +135,153 @@ $totalRows_mos_vertodos = mysql_num_rows($mos_vertodos);
 mysql_select_db($database_conexion, $conexion);
 if ($perid == 3)//super admin
 $query_mos_estado = "SELECT  e.est_id,  r.emp_id,  COUNT(r.est_id) AS cant,  e.est_nombre,e.est_color FROM  call_registro r RIGHT JOIN call_estado e ON r.est_id = e.est_id GROUP BY  e.est_nombre";
-elseif ($perid == 1)//admin
-$query_mos_estado = "SELECT  e.est_id,  r.emp_id,  COUNT(r.est_id) AS cant,  e.est_nombre, e.est_color FROM call_registro r RIGHT JOIN call_estado e ON r.est_id = e.est_id WHERE  r.emp_id = ".$empid." GROUP BY e.est_nombre";
+elseif ($perid == 1 )
+$query_mos_estado = "SELECT  e.est_id,  r.emp_id,  COUNT(r.est_id) AS cant,  e.est_nombre, e.est_color FROM call_registro r RIGHT JOIN call_estado e ON r.est_id = e.est_id inner join call_usuario u ON r.usu_id = u.usu_id WHERE  r.emp_id = ".$empid." and u.cor_id =".$usuid." GROUP BY e.est_nombre";
+elseif ($perid == 4)//admin
+  $query_mos_estado = "SELECT  e.est_id,  r.emp_id,  COUNT(r.est_id) AS cant,  e.est_nombre, e.est_color FROM call_registro r RIGHT JOIN call_estado e ON r.est_id = e.est_id WHERE  r.emp_id = ".$empid." GROUP BY e.est_nombre";
 else
 $query_mos_estado = "SELECT e.est_id,  r.emp_id,  COUNT(r.est_id) AS cant,  e.est_nombre, e.est_color FROM  call_registro r RIGHT JOIN call_estado e ON r.est_id = e.est_id WHERE  r.usu_id = ".$usuid." GROUP BY e.est_nombre";
 $mos_estado = mysql_query($query_mos_estado, $conexion) or die(mysql_error());
 $row_mos_estado = mysql_fetch_assoc($mos_estado);
-
-/////
-//vendedores
+//Productos
 mysql_select_db($database_conexion, $conexion);
-if ($perid == 2)//admin
-  $query_lista_user = "SELECT usu_id, usu_nombre FROM call_usuario where usu_id=".$usuid."  and usu_activo=1";
+$query_mos_curso = "SELECT * FROM producto where pro_activo = 1 order by pro_descripcion asc";
+$mos_curso = mysql_query($query_mos_curso, $conexion) or die(mysql_error());
+$row_mos_curso = mysql_fetch_assoc($mos_curso);
+$totalRows_mos_curso = mysql_num_rows($mos_curso);
+//lista users drow
+mysql_select_db($database_conexion, $conexion);
+if ($perid == 1 )//admin
+$query_lista_user = "SELECT * FROM call_usuario where emp_id=".$empid." and cor_id=".$usuid." and per_id in (2) and usu_activo= 1";
+elseif($perid == 4)
+$query_lista_user = "SELECT * FROM call_usuario where emp_id=".$empid." and per_id in (1,2) and usu_activo= 1";
 else 
-  $query_lista_user = "SELECT usu_id, usu_nombre FROM call_usuario where per_id in (2) and usu_activo=1";
+$query_lista_user = "SELECT * FROM call_usuario where usu_id=".$usuid."";
 $lista_user = mysql_query($query_lista_user, $conexion) or die(mysql_error());
 $row_lista_user = mysql_fetch_assoc($lista_user);
 $totalRows_lista_user = mysql_num_rows($lista_user);
-////Buscar cliente
+//estad
+mysql_select_db($database_conexion, $conexion);
+$query_mos_est = "SELECT * FROM call_estado order by est_nombre asc";
+$mos_est = mysql_query($query_mos_est, $conexion) or die(mysql_error());
+$row_mos_est = mysql_fetch_assoc($mos_est);
+$totalRows_mos_est = mysql_num_rows($mos_est);
+//detalle registro
+/*$colname_mos_registro = "-1";
+if (isset($_GET['id'])) {
+  $colname_mos_registro = $_GET['id'];
+}
+mysql_select_db($database_conexion, $conexion);
+$query_mos_registro = "SELECT reg_id,reg_codigo,reg_apellidos,reg_nombres,DATE_FORMAT(reg_fecha,'%e/%m/%Y')as reg_fecha,r.est_id,r.cur_id,DATE_FORMAT(reg_fechareg,'%e/%m/%Y') as reg_fechareg, usu_id,  CONCAT(IFNULL(reg_apellidos,''),' ',IFNULL(reg_nombres,'')) AS cliente,reg_formacion, reg_observaciones,reg_ciudad,reg_pais,reg_email,reg_telefono,e.est_color,c.pro_descripcion 
+FROM call_registro r INNER JOIN call_estado e ON r.est_id = e.est_id
+INNER JOIN producto c ON r.cur_id = c.pro_id WHERE r.reg_id =". $colname_mos_registro."";
+$mos_registro = mysql_query($query_mos_registro, $conexion) or die(mysql_error());
+$row_mos_registro = mysql_fetch_assoc($mos_registro);
+$totalRows_mos_registro = mysql_num_rows($mos_registro);*/
+//
+
 if (isset($_POST['buscar'])) {
+ 
   mysql_select_db($database_conexion, $conexion);
   $query_mos_pd = "select cli_id,nro_doc,razon_social from cliente where nro_doc =" .$_POST['buscar']."";
   $mos_pd = mysql_query($query_mos_pd, $conexion) or die(mysql_error());
   $row_mos_pd = mysql_fetch_assoc($mos_pd);
   $totalRows_mos_pd = mysql_num_rows($mos_pd);
+/*
+mysql_select_db($database_conexion, $conexion);
+$query_mos_registro = "select * from cliente where nro_doc =" .$_POST['buscar']."";
+$mos_registro = mysql_query($query_mos_registro, $conexion) or die(mysql_error());
+$row_mos_registro = mysql_fetch_assoc($mos_registro);
+$totalRows_mos_registro = mysql_num_rows($mos_registro);*/
 }
 //
+
 $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
 
-if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
-
-  $fecha_remitido = $_POST['vis_fecha'];
-  $fechaconver = implode('-',array_reverse(explode('-', $fecha_remitido)));
- 
-  $insertSQL = sprintf("INSERT INTO call_visitas (vis_fecha, vis_lugar, vis_cli, vis_tipovisita, hora_ini,hora_fin, usu_id, motivo) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-                       GetSQLValueString($fechaconver, "date"),
-                       GetSQLValueString($_POST['vis_lugar'], "text"),
-                       GetSQLValueString($_POST['vis_cli'], "text"),
-                       GetSQLValueString($_POST['vis_tipovisita'], "text"),
-                       //GetSQLValueString(isset($_POST['cur_activo']) ? "true" : "", "defined","1","0"),
-                       GetSQLValueString($_POST['hora_ini'], "text"),
-                       GetSQLValueString($_POST['hora_fin'], "text"),
+if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form1")) {
+	$est = $_POST['est_id'];
+	if ($est == "")
+	$est = 1;
+	else
+	$est = $est;
+  $updateSQL = sprintf("UPDATE call_registro SET est_id=%s, cur_id=%s, reg_apellidos=%s, reg_nombres=%s, reg_formacion=%s, reg_observaciones=%s,usu_id =%s, reg_pais=%s, reg_email=%s, reg_telefono=%s WHERE reg_id=%s",
+                       GetSQLValueString($est, "int"),
+                       GetSQLValueString($_POST['cur_id'], "int"),
+                       GetSQLValueString($_POST['reg_apellidos'], "text"),
+                       GetSQLValueString($_POST['reg_nombres'], "text"),
+                       GetSQLValueString($_POST['reg_formacion'], "text"),
+                       GetSQLValueString($_POST['reg_observaciones'], "text"),
                        GetSQLValueString($_POST['usu_id'], "int"),
-                       GetSQLValueString($_POST['motivo'], "text"));
+                       GetSQLValueString($_POST['reg_pais'], "text"),
+                       GetSQLValueString($_POST['reg_email'], "text"),
+                       GetSQLValueString($_POST['reg_telefono'], "text"),
+                       GetSQLValueString($_POST['reg_id'], "int"));
 
   mysql_select_db($database_conexion, $conexion);
-  $Result1 = mysql_query($insertSQL, $conexion) or die(mysql_error());
-//
-  $m = 'Registrado Correctamente';
-  $insertGoTo = "visitas.php?n=$m";
+  $Result1 = mysql_query($updateSQL, $conexion) or die(mysql_error());
+ //
+  $m = 'Registro Actualizado Correctamente';
+  //
+  $updateGoTo = "index.php?n=$m";
   if (isset($_SERVER['QUERY_STRING'])) {
-    $insertGoTo .= (strpos($insertGoTo, '?')) ? "&" : "?";
-    $insertGoTo .= $_SERVER['QUERY_STRING'];
+    $updateGoTo .= (strpos($updateGoTo, '?')) ? "&" : "?";
+    $updateGoTo .= $_SERVER['QUERY_STRING'];
   }
-  header(sprintf("Location: %s", $insertGoTo));
+  header(sprintf("Location: %s", $updateGoTo));
+}
+// obtenemos msje resultado insertado
+if (isset($_GET['n'])) 
+{
+  $var = $_GET['n'];
+  $msj = '<div class="alert alert-info alert-dismissable">
+         <i class="fa fa-info"></i>
+		 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+             <b>Alerta !</b>'.$var.'!!  </div>';
+}
+if(@$_POST['imbox'])
+{
+  //config
+mysql_select_db($database_conexion, $conexion);
+$query_mos_config = "SELECT * FROM call_config ORDER BY conf_id desc limit 1";
+$mos_config = mysql_query($query_mos_config, $conexion) or die(mysql_error());
+$row_mos_config = mysql_fetch_assoc($mos_config);
+$totalRows_mos_config = mysql_num_rows($mos_config);
+		  //mail
+/*$url = $row_mos_config['conf_url']; //http://reinademipromo.com'
+$correo = $row_mos_config['conf_correo'];//'informes@reinademipromo.com'
+	
+	require('class.phpmailer.php');
+	
+	$mail = new PHPMailer();
+	$mail->Host = "localhost";
+	$mail->From = $correo;
+	$mail->FromName = $_POST['remitente'];//
+	$mail->Subject = $_POST['asunto'];//asunto
+	
+	$mail->AddAddress($_POST['re_email']);
+	$content="<table width=614 height=584 border=0 align=center cellpadding=0 cellspacing=0>
+	     <tr>
+		      <td>".$_POST['imbox']."</td>
+	     </tr>
+	  
+	     <tr>
+	       <td height=35><div align=center class=home_masvistos_campos>Para fijar este email correctamente, a&ntilde;ade <a href=mailto:".$correo." class=monthlink>".$correo."</a> a tus contactos</div></td>
+	     </tr>
+		</td>
+	  </tr>
+	</table>";
+
+			$mail->MsgHTML($content);
+			
+			if(!$mail->Send()) {
+			
+			} else {
+			
+			}*/
+      ////Buscar cliente
 }
 
 ?>
@@ -220,8 +312,8 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
         <link rel="stylesheet" type="text/css" href="css/jQueryUI/jquery-ui-1.10.3.custom.css">
         <link rel="stylesheet" type="text/css" href="css/jQueryUI/jquery-ui-1.10.3.custom.min.css">
         <link  type="text/css" rel="stylesheet" href="css/timepicker/bootstrap-timepicker.min.css" />
-		    <!-- <script src="scripts/innovaeditor.js"></script>
-        HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -247,11 +339,11 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">
                        
-                        <!-- User Account: style can be found in dropdown.less -->
-                     <?php require_once('menu.php'); ?>
+                       <?php require('menu.php'); ?>
+
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="glyphicon glyphicon-user"></i>
+                                <i class="glyphicon glyphicon-user"></i> <?php echo $row_mos_usuario['usu_nombre'];?>
                                 <span> <i class="caret"></i></span>
                             <ul class="dropdown-menu">
                             
@@ -323,7 +415,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                     <!-- sidebar menu: : style can be found in sidebar.less -->
                     <ul class="sidebar-menu">
                   
-                          <?php do { ?>
+                           <?php do { ?>
                         <li> 
                           <a href="categoria.php?es=<?php echo $row_mos_estado['est_id'];?>"><span><?php echo $row_mos_estado['est_nombre'];?></span> 
                             <small class="badge pull-right bg-<?php echo $row_mos_estado['est_color'];?>">
@@ -377,7 +469,6 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                 <!-- Main content -->
                 <section class="content">
                 
-                
 <div class="row">
                 
                 <div class="col-md-12">
@@ -386,12 +477,13 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                                 
                    
                   <div class="box-header"> 
-                  <h3 class="box-title"><i class="fa fa-briefcase"></i> Nueva Visita</h3>
+                  <h3 class="box-title"><?php echo $row_mos_registro['cliente'].' ! ' .$row_mos_registro['reg_codigo'];?></h3>
                   </div>
                    
                   <div class="box-body">
-
-<div class="row" style="margin-bottom:10px;">
+                  		
+                   
+                               <div class="row" style="margin-bottom:10px;">
                     <div class="col-sm-3 search-form">
                     <legend>
                             <form name="formb" id="formb" action="" method="post" class="text-right">
@@ -405,81 +497,257 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                         </legend>
                         </div>
 </div>
-                    <form method="post" name="form1" action="<?php echo $editFormAction; ?>">
-                           
-                           <div class="row">
-                              <div class="col-md-2">
-                                  <div class="form-group">RUC / DNI:
-                                      <input type="text" name="vis_ruc"  value="<?php echo htmlentities(@$row_mos_pd['nro_doc'] , ENT_COMPAT, 'UTF-8'); ?>"  class="form-control" readonly>
-                                  </div>  
-                              </div>
-                              <div class="col-md-4">
-                                  <div class="form-group">Nombres / Razón Social:
-                                      <input type="text" name="vis_cliente"  value="<?php echo htmlentities(@$row_mos_pd['razon_social'] , ENT_COMPAT, 'UTF-8'); ?>"  class="form-control" readonly>
-                                  </div>  
-                              </div>
-                              <input type="hidden" name="vis_cli" value="<?php echo htmlentities(@$row_mos_pd['cli_id'] , ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
-                          
-                             <div class="col-md-3">
-                        <div class="form-group">Fecha Visita:
-                          <div class="input-group">
-                           <div class="input-group-addon">
-                           <i class="fa fa-calendar"></i></div>
-                          <input type="text" id="vis_fecha" name="vis_fecha" value="" class="form-control" placeholder="dd-mm-yyyy" required>
-                            </div>
-                        </div> </div>
-                          <div class="col-md-3"> 
-                          <div class="form-group">Vendedor :
-                          <!--<input type="text" id="usu_id" name="usu_id" value="" class="form-control" required>-->
-                  <select name="usu_id" id="usu_id" class="form-control">
-                      <?php
-                      echo '<option value="0">-- Seleccione --</option>';           
-                      do
-                            { 
-                                echo '<option value="'.$row_lista_user['usu_id'].'">'.$row_lista_user['usu_nombre'].'</option>';
-                            } while ($row_lista_user = mysql_fetch_assoc($lista_user));              
-                            ?>
-                    </select>
 
-                      </div>
-                        </div>               
-                </div>
-                        <div class="form-group">Lugar:
-                          <input type="text" name="vis_lugar" value="" class="form-control" maxlength="100">
+      <form method="post" name="form1" action="<?php echo $editFormAction; ?>">
+                    
+        <div class="row">        
+                             
+          <div class="col-md-9 col-sm-9">
+              <!--Id cliente-->
+               <input type="hidden" name="cli_id" value="<?php echo htmlentities(@$row_mos_registro['cli_id'] , ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
+
+                 <div class="row">	
+                    <div class="col-md-3">
+                     <small class="badge pull-left bg-<?php echo $row_mos_registro['est_color'];?>"> 
+                        <?php echo $row_mos_registro['reg_fecha']; ?>
+                     </small>
+                    </div>
+                    <div class="col-md-3">
+                            <strong><?php echo $row_mos_registro['reg_telefono'];?></strong>
+                    </div>
+                    <div class="col-md-3">
+                     <a href="mailto:<?php echo $row_mos_registro['reg_email'];?>">
+                        <?php echo $row_mos_registro['reg_email'];?>
+                     </a>
+                    </div>
+                 </div>  <!-- -->
+                 
+             <div class="row" style="margin-top:10px;">	
+                 <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="input-group">
+                                      <div class="input-group-addon">
+                                         <i class="fa fa-briefcase"></i>
+                                      </div>
+    <input type="text" name="curso" class="form-control" value="<?php echo $row_mos_registro['pro_descripcion'];?>" disabled>
                         </div>
+                     </div>   
+                 </div> 
+                 <div class="col-md-12">
+                 <div class="form-group">Observaciones:
+                 <textarea class="form-control" name="reg_observaciones" cols="50" rows="4">
+                 
+                 </textarea> 
+                             </div>
+                 </div>
+             </div>
+             
+          </div><!--end colum-->
+          
+          <div class="col-md-3 col-sm-3">
+          		 <div class="form-group">
+                 <a class="btn btn-primary" data-toggle="modal" data-target="#compose-modal"><i class="fa fa-envelope"></i> Correo</a>
+                 </div>
+                 <!--Estado:-->
+                                <label>
+                                
+                                <?php do { ?>
+                                 <div class="radio">
+                                <label>  
+                                <input type="radio" name="est_id" value="<?php echo $row_mos_est['est_id'];?>" <?php if (!(strcmp(htmlentities($row_mos_registro['est_id'], ENT_COMPAT, 'UTF-8'),$row_mos_est['est_id']))) {echo "checked=\"checked\"";} ?>>
+                                 <?php echo $row_mos_est['est_nombre'];?>
+                                 </label>
+                                 </div>
+                                <?php } while ($row_mos_est = mysql_fetch_assoc($mos_est)); ?>                              
+                   </div>  <!--end colum3-->       
+        </div><!--end row-->
+      <div class="row">
+      	<div class="col-lg-9 col-md-9">
+        		<div class="row">
+                	<div class="col-md-6">
+                            <div class="form-group">Apellidos:
+                            <div class="input-group">
+                                  <div class="input-group-addon">
+                                     <i class="fa fa-user"></i>
+                                  </div>
+                               <input type="text" name="reg_apellidos" value="<?php echo htmlentities($row_mos_registro['reg_apellidos'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
+                             	</div>
+                             </div>
+                    </div>
+
+                	<div class="col-md-6">          
+                              <div class="form-group">Nombres:
+                              <div class="input-group">
+                                  <div class="input-group-addon">
+                                     <i class="fa fa-user"></i>
+                                  </div>
+                               <input type="text" name="reg_nombres" value="<?php echo htmlentities($row_mos_registro['reg_nombres'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
+                             	</div>
+                             </div>
+                    </div>
+                 </div><!--edn ro -->   
+                 <div class="row">
+                	<div class="col-md-6"> 
+                            
+                             <div class="form-group">Producto:
+                             <div class="input-group">
+                                  <div class="input-group-addon">
+                                     <i class="fa fa-briefcase"></i>
+                                  </div>
+                                <select name="cur_id" class="form-control">
+                                  <?php 
+do {  
+?>
+                                  <option value="<?php echo $row_mos_curso['pro_id']?>" <?php if (!(strcmp($row_mos_curso['pro_id'], htmlentities($row_mos_registro['cur_id'], ENT_COMPAT, 'UTF-8')))) {echo "SELECTED";} ?>><?php echo $row_mos_curso['pro_descripcion']?></option>
+                                  <?php
+} while ($row_mos_curso = mysql_fetch_assoc($mos_curso));
+?>
+                                </select>
+                                </div>
+                             </div>
+                     </div>
+                     <div class="col-md-6"> 
+<div class="form-group">Nombre del Asesor:
+                             <div class="input-group">
+                                  <div class="input-group-addon">
+                                     <i class="fa fa-home"></i>
+                                  </div>
+                                <select name="usu_id" class="form-control">
+                                  <?php 
+do {  
+?>
+                                  <option value="<?php echo $row_lista_user['usu_id']?>" <?php if (!(strcmp($row_lista_user['usu_id'], htmlentities($row_mos_registro['usu_id'], ENT_COMPAT, 'UTF-8')))) {echo "SELECTED";} ?>><?php echo $row_lista_user['usu_nombre']?></option>
+                                  <?php
+} while ($row_lista_user = mysql_fetch_assoc($lista_user));
+?>
+                                </select>
+                                </div>
+                             </div>
+                     </div>
                      
-                        <div class="form-group">Tipo Visita:
-                          <input type="text" name="vis_tipovisita" value="" class="form-control" maxlength="100">
-                        </div>
-                        <div class="form-group">Motivo:
-                          <textarea name="motivo" class="form-control"></textarea>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-6">
-                           <div class="form-group">Hora Ini:
-                            <input type="text" name="hora_ini" value="" class="form-control">
-                          </div></div>
-                          <div class="col-md-6">
-                          <div class="form-group">Hora Fin:
-                            <input type="text" name="hora_fin" value="" class="form-control">
-                          </div></div>
-                        </div>
-
                   </div>
-                  <div class="box-footer">
-                       <button type="submit" class="btn btn-primary pull-left">
-                       <i class="fa fa-save"></i> Guardar</button>
-              <a href="visitas.php" style="margin-left:10px;">
+                	<div class="row">
+                    <div class="col-md-6">        
+                              <div class="form-group">DNI / RUC:
+                              <div class="input-group">
+                                  <div class="input-group-addon">
+                                     <i class="fa fa-archive"></i>
+                                  </div>
+                               <input type="text" name="reg_formacion" value="<?php echo htmlentities($row_mos_registro['reg_formacion'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
+                             </div></div>
+                    </div>
+                
+                
+                
+                	<div class="col-md-6">         
+                              <div class="form-group">Pais:
+                              <div class="input-group">
+                                  <div class="input-group-addon">
+                                     <i class="fa fa-flag"></i>
+                                  </div>
+                               <input type="text" name="reg_pais" value="<?php echo htmlentities($row_mos_registro['reg_pais'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
+                             </div></div>
+                    </div>
+                 </div>
+                
+
+                 <div class="row">
+                	   <div class="col-md-6">
+                              <div class="form-group">Email:
+                              <div class="input-group">
+                                  <div class="input-group-addon">
+                                     <i class="fa fa-envelope"></i>
+                                  </div>
+                               <input type="email" name="reg_email" value="<?php echo htmlentities($row_mos_registro['reg_email'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
+                             </div>
+                             </div>
+                     </div>
+
+                	<div class="col-md-6">
+                              <div class="form-group">Teléfono:
+                              <div class="input-group">
+                                  <div class="input-group-addon">
+                                     <i class="fa fa-phone-square"></i>
+                                  </div>
+                               <input type="text" id="reg_telefono" name="reg_telefono" value="<?php echo htmlentities($row_mos_registro['reg_telefono'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control">
+                             </div>
+                             </div>
+                     </div>
+                </div>             
+	</div>
+</div>
+                </div><!-- body -->
+                <div class="box-footer">
+          
+              <button type="submit" class="btn btn-primary pull-left"><i class="fa fa-save"></i> Guardar</button>
+              <a href="index.php" style="margin-left:10px;">
                  <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button></a>
-                      <input type="hidden" name="MM_insert" value="form1">
-                    </form>
-                  </div>                 
-                  <!-- body -->
+				 <input type="hidden" name="MM_update" value="form1">
+                 <input type="hidden" name="reg_id" value="<?php echo $row_mos_registro['reg_id']; ?>">
+                          </form>
+                </div>
     </div><!-- /.primary-->
           </div><!-- /.col-->
     </div> <!-- /.row -->
-    <!--- -->
-    
+    <!--- MODAL-->
+    <div class="modal fade" id="compose-modal" tabindex="-1" role="dialog" aria-hidden="true"> 
+<div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+     <h4 class="modal-title"><i class="fa fa-envelope"></i> Enviar Correo</h4>
+                  </div>
+    <form method="post" name="formenviar" action="">
+          <div class="modal-body">
+          		 <div class="row">
+                <div class="col-md-12">
+                              <div class="form-group">Remite:
+                              <div class="input-group">
+                                  <div class="input-group-addon">
+                                     <i class="fa fa-envelope"></i>
+                                  </div>
+                               <input type="text" name="remitente" value="" class="form-control" >
+                             </div>
+                             </div>                            
+
+
+                             <div class="form-group">Asunto:
+                              <div class="input-group">
+                                  <div class="input-group-addon">
+                                     <i class="fa fa-envelope"></i>
+                                  </div>
+                               <input type="text" name="asunto" value="" class="form-control" >
+                             </div>
+                             </div>
+
+                              <div class="form-group">Email:
+                              <div class="input-group">
+                                  <div class="input-group-addon">
+                                     <i class="fa fa-envelope"></i>
+                                  </div>
+                               <input type="email" name="re_email" value="<?php echo htmlentities($row_mos_registro['reg_email'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control" >
+                             </div>
+                             </div>
+                </div></div>
+                <div class="row">
+                 	<div class="col-md-12"> 
+                      <div class="form-group">  	
+                       <textarea class="form-control" name="imbox" cols="50" rows="7" required placeholder="Mensaje ..."></textarea> 	
+           			  </div>
+                	</div>
+                </div>
+           </div><!-- end body-->
+           <div class="modal-footer clearfix">
+
+              <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+ 			  
+              <button type="submit" class="btn btn-primary pull-left"><i class="fa fa-envelope-o"></i> Enviar</button>
+                        </div>
+                  </form>
+                </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+          
   				</section><!-- /.content -->
             </aside><!-- /.right-side -->
         </div><!-- ./wrapper -->
@@ -487,8 +755,8 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
         <!-- add new calendar event modal -->
         <!-- jQuery 2.0.2 -->
         <script src="js/jquery.min.js" type="text/javascript"></script>
-        <!-- jQuery UI 1.10.3 
-        <script src="js/jquery-ui-1.10.3.min.js" type="text/javascript"></script>-->
+        <!-- jQuery UI 1.10.3 -->
+        <script src="js/jquery-ui-1.10.3.min.js" type="text/javascript"></script>
         <!-- Bootstrap -->
         <script src="js/bootstrap.min.js" type="text/javascript"></script>
         <!-- Morris.js charts -->
@@ -544,7 +812,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                     $('#ContentPlaceHolder1_txtDisponibilidad').validCampo(' abcdefghijklmnñopqrstuvwxyzáéiouúó0123456789');
                     $('#ContentPlaceHolder1_txtCicloAcademico').validCampo(' abcdefghijklmnñopqrstuvwxyzáéiouúó0123456789');
                     //Para escribir solo numeros    
-                    $('#reg_telefono').validCampo('0123456789');
+                    //$('#reg_telefono').validCampo('0123456789');
                    
                     //Para numeros letras y algunos caracteres especiales
                     $('#ContentPlaceHolder1_txtDireccion').validCampo(' abcdefghijklmnñopqrstuvwxyzáéiouúó0123456789.,-#');
@@ -557,30 +825,11 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                 });
 
     </script>
-
-   <script type="text/javascript">
-      $(function() {
-        $( "#vis_fecha" ).datepicker({
-          defaultDate: "",
-          changeMonth: true, 
-          numberOfMonths: 1,dateFormat: "dd-mm-yy",
-          dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
-          monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-          onClose: function( selectedDate ) {
-            $( "#to" ).datepicker( "option", "minDate", selectedDate );
-          }
-        });
-        $( "#to" ).datepicker({
-          defaultDate: "",
-          changeMonth: true,
-          numberOfMonths: 1,dateFormat: "dd-mm-yy",
-          dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
-          monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-          onClose: function( selectedDate ) {
-            $( "#from" ).datepicker( "option", "maxDate", selectedDate );
-          }
-        });
-      });
-    </script>
 </body>
 </html>
+<?php
+mysql_free_result($mos_usuario);
+mysql_free_result($mos_registro);
+mysql_free_result($mos_curso);
+mysql_free_result($mos_est);
+?>

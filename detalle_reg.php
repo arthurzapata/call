@@ -233,7 +233,7 @@ $mos_config = mysql_query($query_mos_config, $conexion) or die(mysql_error());
 $row_mos_config = mysql_fetch_assoc($mos_config);
 $totalRows_mos_config = mysql_num_rows($mos_config);
 		  //mail
-$url = $row_mos_config['conf_url']; //http://reinademipromo.com'
+/*$url = $row_mos_config['conf_url']; //http://reinademipromo.com'
 $correo = $row_mos_config['conf_correo'];//'informes@reinademipromo.com'
 	
 	require('class.phpmailer.php');
@@ -263,8 +263,9 @@ $correo = $row_mos_config['conf_correo'];//'informes@reinademipromo.com'
 			
 			} else {
 			
-			}
+			}*/
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -463,12 +464,14 @@ $correo = $row_mos_config['conf_correo'];//'informes@reinademipromo.com'
                    
                   <div class="box-body">
                   		
+                   
+
       <form method="post" name="form1" action="<?php echo $editFormAction; ?>">
                     
         <div class="row">        
                              
           <div class="col-md-9 col-sm-9">
-             
+               <!-- <input type="hidden" name="cli_id" value="<?php echo htmlentities(@$row_mos_registro['cli_id'] , ENT_COMPAT, 'UTF-8'); ?>" class="form-control">-->
                  <div class="row">	
                     <div class="col-md-3">
                      <small class="badge pull-left bg-<?php echo $row_mos_registro['est_color'];?>"> 
