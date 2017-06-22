@@ -189,40 +189,45 @@ if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
 }
 
-if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form2")) {
+if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
 	//
 	date_default_timezone_set('America/Lima');
 	$fecha = date("Y-m-d");
 	$hora = date("H:i:s");
 //
 mysql_select_db($database_conexion, $conexion);
-$query_nro_ped = "SELECT MAX(cn_numero) + 1 as nroped FROM documento";
+$query_nro_ped = "SELECT LPAD(MAX(cn_numero) + 1,7,'0') as nroped FROM documento";
 $nro_ped = mysql_query($query_nro_ped, $conexion) or die(mysql_error());
 $row_nro_ped = mysql_fetch_assoc($nro_ped);
 $totalRows_nro_ped = mysql_num_rows($nro_ped);
   
-if ($row_nro_ped['cn_numero']== "") 
+if ($row_nro_ped['nroped']== "") 
 {
-$idped = 1;}
+$idped = '0000001';}
 else
 {
-$idped = $row_nro_ped['cn_numero'];
+$idped = $row_nro_ped['nroped'];
 }
-  	//
+
+  $fecha_remitido = $_POST['fecha_ped'];
+  $fechaconver = implode('-',array_reverse(explode('-', $fecha_remitido)));
+
   	$insertSQL = sprintf("INSERT INTO documento (cn_serie, cn_numero,tipo_doc, nro_pedido, cc_cliente, cc_vta, cc_moneda, cc_vendedor, total, fecha_ped) 
   						VALUES (%s, %s, %s,%s, %s, %s, %s, %s, %s, %s)",
-                       	  GetSQLValueString($idped, "int"),
-                       	  GetSQLValueString($row_mos_usuario['id_emp'], "int"),
-					   	            GetSQLValueString($fecha, "date"),
-						              GetSQLValueString($_SESSION['mesa'], "int"),
-						              GetSQLValueString(0, "int"),// 0 PEDIDO EN ESPERAAA 1 PEDIDO CANCELADO
-                       	  GetSQLValueString($_SESSION['total'], "double"),
-						              GetSQLValueString($hora, "text"),
-						              GetSQLValueString($row_ultima_apertura['id_cierre'], "int"));
+                          GetSQLValueString($_POST['serie'], "text"), 
+                       	  GetSQLValueString($idped, "text"), //numero
+                       	  GetSQLValueString($_POST['tipo_doc'], "text"),
+					   	            GetSQLValueString($_POST['nro_pedido'], "int"),
+						              GetSQLValueString($_POST['cli_id'], "int"),
+						              GetSQLValueString(1, "text"),// 0 PEDIDO EN ESPERAAA 1 PEDIDO CANCELADO
+                       	  GetSQLValueString('01', "text"),
+						              GetSQLValueString($_POST['cc_vendedor'], "int"),
+                          GetSQLValueString($_POST['total'],"double"),
+						              GetSQLValueString($fechaconver,"date"));
   mysql_select_db($database_conexion, $conexion);
   $Result1 = mysql_query($insertSQL, $conexion) or die(mysql_error());
   //detalle
-  $producto = isset($_POST['KEY_PROD']) ? $_POST['KEY_PROD'] : NULL;
+  /*$producto = isset($_POST['KEY_PROD']) ? $_POST['KEY_PROD'] : NULL;
   for ($i=0;$i<sizeof($producto);$i++){
 
   $query = sprintf("INSERT INTO det_pedido (id_pedido, id_plat,cantidad, importe) VALUES (%s, %s, %s, %s)",
@@ -231,7 +236,7 @@ $idped = $row_nro_ped['cn_numero'];
 					   GetSQLValueString($_POST['cantidad'], "int"),
 					   GetSQLValueString($_POST['importe'], "double"));
  	mysql_select_db($database_conexion, $conexion);
-  	$Result2 = mysql_query($query, $conexion) or die(mysql_error());
+  	$Result2 = mysql_query($query, $conexion) or die(mysql_error());*/
 
 	$mensaje = 'Comprobante Registrado Correctamente.';
   	//
@@ -241,7 +246,7 @@ $idped = $row_nro_ped['cn_numero'];
     $insertGoTo .= $_SERVER['QUERY_STRING'];
   	}
   	header(sprintf("Location: %s", $insertGoTo));
- 	}  
+ 	//}  
 }
 ?>
 <!DOCTYPE html>
@@ -411,15 +416,15 @@ $idped = $row_nro_ped['cn_numero'];
 								<div class="form-group">Tipo Comprobante
 									<select name="tipo_doc" class="form-control">
                                         <option value="02" selected="">BOLETA</option>
-										<option value="01" selected="">FACTURA</option>
+										                    <option value="01" selected="">FACTURA</option>
                                     </select>
 								</div>
 							</div>
 							<div class="col-md-1">Serie
-								<div class="form-group"><input type="text" name="serie" class="form-control" required> </div>
+								<div class="form-group"><input type="text" name="serie" class="form-control" value="F011" readonly> </div>
 							</div>
 							<div class="col-md-2">Número
-								<div class="form-group"><input type="text" name="numero" class="form-control"  required> </div>
+								<div class="form-group"><input type="text" name="numero" class="form-control"  readonly=""> </div>
 							</div>
 							<div class="col-md-2">
 								<div class="form-group">Fecha
@@ -427,7 +432,9 @@ $idped = $row_nro_ped['cn_numero'];
 										<div class="input-group-addon">
 										  <i class="fa fa-calendar"></i>
 										</div>
-										<input type="text" id="fecha_ped" name="fecha_ped" value="<?php echo $fechaactual;?>" class="form-control" required>
+										<!--<input type="text" id="fecha_ped" name="fecha_ped" value="<?php echo $fechaactual;?>" class="form-control" required>-->
+                        <input type="text" id="fecha_ped" name="fecha_ped" value="" class="form-control" required>
+                    <input type="hidden" id="nro_pedido" name="nro_pedido"  value="<?php echo htmlentities(@$row_mos_curso['nro_pedido'] , ENT_COMPAT, 'UTF-8'); ?>" class="form-control" required>
 									</div>
 								</div>
 							</div>
@@ -438,13 +445,21 @@ $idped = $row_nro_ped['cn_numero'];
 										<div class="input-group-addon">
 										  <i class="fa fa-calendar"></i>
 										</div>
-										<input type="text" id="cliente" name="cliente" value="<?php echo htmlentities(@$row_mos_curso['nro_doc'] . " - " .@$row_mos_curso['razon_social'] , ENT_COMPAT, 'UTF-8'); ?>" class="form-control" required>
+										<input type="text" id="cliente" name="cliente" value="<?php echo htmlentities(@$row_mos_curso['nro_doc'] . " - " .@$row_mos_curso['razon_social'] , ENT_COMPAT, 'UTF-8'); ?>" class="form-control" readonly>
 									</div>
 								</div>
 							</div>
 							<input type="hidden" name="cli_id" id="cli_id" value="<?php echo htmlentities($row_mos_curso['cli_id'], ENT_COMPAT, 'UTF-8'); ?>">
 					   </div>
-					  
+
+             <div class="row">
+					  <div class="col-md-2">Moneda
+                <div class="form-group"><input type="text" name="numero" value="PEN" class="form-control" > </div>
+              </div>
+              <div class="col-md-2">N° Pedido
+                <div class="form-group"><input type="text" name="nroped" value="<?php echo htmlentities($row_mos_curso['nro_pedido'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control" > </div>
+              </div>
+            <div class="col-md-8">
                   <div class="form-group">Vendedor :
                        <select name="cc_vendedor" id="cc_vendedor" class="form-control">
                             <?php
@@ -469,6 +484,7 @@ $idped = $row_nro_ped['cn_numero'];
                                 </select>
 -->
                   </div>
+                  </div></div>
 							<!--<div class="col-md-1">Cod Vend
 								<div class="form-group"><input type="text" name="codven" class="form-control" value="<?php echo htmlentities(@$row_mos_curso['cc_vendedor'], ENT_COMPAT, 'UTF-8'); ?>" required> </div>
 							</div>
@@ -517,8 +533,11 @@ $idped = $row_nro_ped['cn_numero'];
 							  </tr>
 							  <tr>
 								<td colspan="5" align="right"><strong>TOTAL A PAGAR</strong></td>
-								<td align="right"><strong><?php echo number_format($total + $igv,2);?></strong></td>
-							  </tr>
+								<td align="right"><strong>
+                <?php
+                @$totalfinal = $total + $igv;
+                echo number_format($totalfinal,2);?></strong></td>
+                   <input type="hidden" id="total" name="total"  value="<?php echo @$totalfinal;?>"> </tr>
 						  </table>
 						  <?php 
 						  } // Show if recordset empty
