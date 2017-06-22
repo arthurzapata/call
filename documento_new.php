@@ -457,7 +457,7 @@ $idped = $row_nro_ped['nroped'];
                 <div class="form-group"><input type="text" name="numero" value="PEN" class="form-control" > </div>
               </div>
               <div class="col-md-2">N° Pedido
-                <div class="form-group"><input type="text" name="nroped" value="<?php echo htmlentities($row_mos_curso['nro_pedido'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control" > </div>
+                <div class="form-group"><input type="text" name="nroped" value="<?php echo htmlentities(@$row_mos_curso['nro_pedido'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control" > </div>
               </div>
             <div class="col-md-8">
                   <div class="form-group">Vendedor :

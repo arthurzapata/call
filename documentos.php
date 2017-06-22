@@ -131,7 +131,7 @@ if (isset($_GET['pageNum_mos_curso'])) {
 $startRow_mos_curso = $pageNum_mos_curso * $maxRows_mos_curso;
 
 mysql_select_db($database_conexion, $conexion);
-$query_mos_curso = "SELECT cn_serie,cn_numero,tipo_doc,nro_pedido,c.nro_doc,c.razon_social,cc_vta,cc_moneda,d.fecha_reg,u.usu_nombre, total FROM documento d left join cliente c on d.cc_cliente =c.cli_id 
+$query_mos_curso = "SELECT cn_serie,cn_numero,tipo_doc,nro_pedido,c.nro_doc,c.razon_social,cc_vta,cc_moneda,d.fecha_reg,u.usu_nombre, total,fecha_ped FROM documento d left join cliente c on d.cc_cliente =c.cli_id 
 left join call_usuario u on d.cc_vendedor = u.usu_id order by d.fecha_reg desc";
 $query_limit_mos_curso = sprintf("%s LIMIT %d, %d", $query_mos_curso, $startRow_mos_curso, $maxRows_mos_curso);
 $mos_curso = mysql_query($query_limit_mos_curso, $conexion) or die(mysql_error());
@@ -145,9 +145,16 @@ if (isset($_GET['totalRows_mos_curso'])) {
 }
 $totalPages_mos_curso = ceil($totalRows_mos_curso/$maxRows_mos_curso)-1;
 
-if (isset($_POST['buscar'])) {
+if (isset($_POST['from'])) {
+
+      $from = $_POST['from']; //desd
+    $to = $_POST['to']; //hasta
+    $fromconver = implode('-',array_reverse(explode('-', $from)));
+    $toconver = implode('-',array_reverse(explode('-', $to)));
+
     mysql_select_db($database_conexion, $conexion);
-  $query_mos_curso = "SELECT * FROM documento where cn_serie+'-'+cn_numero like '%".$_POST['buscar']."%'";
+  $query_mos_curso = "SELECT cn_serie,cn_numero,tipo_doc,nro_pedido,c.nro_doc,c.razon_social,cc_vta,cc_moneda,d.fecha_reg,u.usu_nombre, total,fecha_ped FROM documento d left join cliente c on d.cc_cliente =c.cli_id 
+left join call_usuario u on d.cc_vendedor = u.usu_id where fecha_ped between '". $fromconver."' and '". $toconver ."' order by d.fecha_reg desc";
   $mos_curso = mysql_query($query_mos_curso, $conexion) or die(mysql_error());
   $row_mos_curso = mysql_fetch_assoc($mos_curso);
 }
@@ -311,14 +318,41 @@ if (isset($_GET['n']))
                           <a class="btn btn-primary" href="documento_new.php"><i class="fa fa-pencil"></i> Agregar</a>
             </div>
                     <div class="col-sm-6 search-form">
-                            <form name="formb" id="formb" action="" method="post" class="text-right">
-                                  <div class="input-group">                                          
-                                     <input type="text" name="buscar" class="form-control" placeholder="Buscar ...">
-                                 <div class="input-group-btn">
-                                 <button type="submit" name="q" class="btn btn btn-primary"><i class="fa fa-search"></i></button>
-                                 </div>
-                        </div>                                                     
-                        </form>
+                            <form id="formb" name="formb" action="" method="post">          
+                                   <div class="row"> 
+                                    <div class="col-md-4">
+                                          <div class="form-group">
+                                            <div class="input-group">
+                                              <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                              </div>
+                                              <input type="text" class="form-control" value="<?php echo $from; ?>" name="from" id="from" placeholder="dd-mm-yyyy">
+                                            </div><!-- /.input group -->
+                                          </div>
+                                    </div>
+                                    
+                                    <div class="col-md-4">
+                                          <div class="form-group">
+                                            <div class="input-group">
+                                              <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                              </div>
+                                              <input type="text" class="form-control" value="<?php echo $to; ?>" name="to" id="to" placeholder="dd-mm-yyyy">
+                                            </div><!-- /.input group -->
+                                          </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                    
+                                    <div class="form-group">
+                                
+                                
+                                      <div class="input-group-btn">
+                                           <button type="submit" name="bu" class="btn btn btn-primary"><i class="fa fa-search"></i></button>
+                                      </div></div>
+                                      </div>
+                                        </div>
+                         </form>
                         </div>
                    </div>     
 
@@ -336,26 +370,21 @@ if (isset($_GET['n']))
       <td><strong>Vendedor</strong></td>
       <td><strong>Fecha</strong></td>
       <td align="center"><strong >Total</strong></td>
-      <td align="center"><strong> <element>Editar</element></strong></td>
-      <td colspan="2" align="center"><strong>Acciones</strong></td>
+     <!-- <td align="center"><strong> <element>Editar</element></strong></td>
+      <td colspan="2" align="center"><strong>Acciones</strong></td>-->
     </tr>
     <?php do { ?>
       <tr>
-        <td><?php echo $row_mos_curso['cn_serie'].'-'.$row_mos_curso['cn_numero']; ?></td>
+        <td><?php echo $row_mos_curso['cn_serie'].' - '.$row_mos_curso['cn_numero']; ?></td>
         <td><?php echo $row_mos_curso['tipo_doc'] == '01'?  'FACTURA' : 'BOLETA'; ?></td>
         <td><?php echo $row_mos_curso['nro_pedido'];?></td>
         <td><?php echo $row_mos_curso['nro_doc'].'-'.$row_mos_curso['razon_social']; ?></td>
         <td><?php echo $row_mos_curso['usu_nombre'];?></td>
-        <td><?php echo $row_mos_curso['fecha_reg'];?></td>
+        <td><?php echo $row_mos_curso['fecha_ped'];?></td>
         <td align="right"><?php echo $row_mos_curso['total']; ?></td>
-       <!--- <td><?php echo '...'; ?></td>
-        <td align="center"><?php if($row_mos_curso['cur_activo']==1)
-           $estado = 'success'; else $estado= 'danger'; ?>
-      <a href="up_estadoc.php?pk=<?php echo $row_mos_curso['cur_id']; ?>" title="Cambiar Estado" class="hide-option">
-            <button class="btn btn-<?php echo $estado?>" type="button" data-toggle="tooltip"></button></a>
-     </td>-->
-      <td><div align="center"><a href="producto_edit.php?id=<?php echo $row_mos_curso['pro_id']; ?>" title="Editar" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Editar"><i class="fa fa-edit"></i></button></a></div></td>
-        <td><div align="center"><a onclick="return confirm('¿Seguro que desea eliminar?')" href="producto_delete.php?id=<?php echo $row_mos_curso['pro_id']; ?>" title="Eliminar" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Eliminar"><i class="fa fa-trash-o"></i></button></a></div></td>
+       
+   <!--   <td><div align="center"><a href="producto_edit.php?id=<?php echo $row_mos_curso['pro_id']; ?>" title="Editar" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Editar"><i class="fa fa-edit"></i></button></a></div></td>
+        <td><div align="center"><a onclick="return confirm('¿Seguro que desea eliminar?')" href="producto_delete.php?id=<?php echo $row_mos_curso['pro_id']; ?>" title="Eliminar" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Eliminar"><i class="fa fa-trash-o"></i></button></a></div></td>-->
       </tr>
       <?php } while ($row_mos_curso = mysql_fetch_assoc($mos_curso)); ?>
 
