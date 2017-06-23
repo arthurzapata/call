@@ -230,14 +230,17 @@ $idped = $row_nro_ped['nroped'];
   //detalle
   /*$producto = isset($_POST['KEY_PROD']) ? $_POST['KEY_PROD'] : NULL;
   for ($i=0;$i<sizeof($producto);$i++){
-
-  $query = sprintf("INSERT INTO det_pedido (id_pedido, id_plat,cantidad, importe) VALUES (%s, %s, %s, %s)",
-                       GetSQLValueString($idped, "int"),
-					   GetSQLValueString($producto[$i], "int"),
-					   GetSQLValueString($_POST['cantidad'], "int"),
+*/
+  $query = sprintf("INSERT INTO documento_det (cn_item, cn_serie,cn_numero,pro_id,cant,precio, importe) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+             GetSQLValueString(1, "int"),
+             GetSQLValueString($_POST['serie'],"text"),
+             GetSQLValueString($idped, "text"),
+             GetSQLValueString($_POST['pro_id'], "int"),
+					   GetSQLValueString($_POST['cant'], "int"),
+             GetSQLValueString($_POST['precio'], "double"),
 					   GetSQLValueString($_POST['importe'], "double"));
  	mysql_select_db($database_conexion, $conexion);
-  	$Result2 = mysql_query($query, $conexion) or die(mysql_error());*/
+  	$Result2 = mysql_query($query, $conexion) or die(mysql_error());
 
 	$mensaje = 'Comprobante Registrado Correctamente.';
   	//
@@ -467,23 +470,22 @@ $idped = $row_nro_ped['nroped'];
                             echo '<option value="0">-- Seleccione --</option>';           
                             do
                                   { 
-                                      echo '<option value="'.$row_lista_user['usu_id'].'">'.$row_lista_user['usu_nombre'].'</option>';
+                                      echo '<option value="'.$row_mos_curso['cc_vendedor'].'">'.$row_lista_user['usu_nombre'].'</option>';
                                   } while ($row_lista_user = mysql_fetch_assoc($lista_user));              
                                   ?>
                           </select>
-
- <!--
-                                  <select name="usu_id" id="usu_id" class="form-control">
+                       <!--
+              <select name="cc_vendedor" id="cc_vendedor" class="form-control">
                                   <?php 
-                                    do { ?>
-                                    <option value="<?php echo $row_lista_user['usu_id']?>"
-                <?php if (!(strcmp($row_lista_user['usu_id'], htmlentities($row_mos_curso['cc_vendedor'], ENT_COMPAT, 'UTF-8')))) {echo "SELECTED";} ?>>
-                <?php echo $row_lista_user['usu_nombre']?></option>
-                                    <?php
-                                    } while ($row_lista_user = mysql_fetch_assoc($lista_user));
-                                    ?>
+do {  
+?>
+                                  <option value="<?php echo $row_lista_user['usu_id']?>" <?php if (!(strcmp($row_lista_user['usu_id'], htmlentities($row_mos_curso['cc_vendedor'], ENT_COMPAT, 'UTF-8')))) {echo "SELECTED";} ?>><?php echo $row_lista_user['usu_nombre']?></option>
+                                  <?php
+} while ($row_lista_user = mysql_fetch_assoc($lista_user));
+?>
                                 </select>
--->
+ -->
+
                   </div>
                   </div></div>
 							<!--<div class="col-md-1">Cod Vend
@@ -512,11 +514,20 @@ $idped = $row_nro_ped['nroped'];
 							?>
 							  <tr>
 								<td><?php echo $item; ?></td>
-								<td><input name="KEY_PROD[]" type="hidden" id="KEY_PROD[]" value="<?php echo $prod[0]['pro_id'];?>"><?php echo $row_mos_pd['pro_id']; ?></td>
+								<td>
+                <input name="KEY_PROD[]" type="hidden" id="KEY_PROD[]" value="<?php echo $prod[0]['pro_id'];?>"><?php echo $row_mos_pd['pro_id']; ?>
+                  <input name="pro_id" type="hidden" id="pro_id" value="<?php echo $row_mos_pd['pro_id']; ?>">
+                </td>
 								<td><?php echo $row_mos_pd['pro_descripcion'];?></td>
-								<td><?php echo $row_mos_pd['cant'];?></td>
-								<td align="right"><?php echo $row_mos_pd['precio']; ?></td>
-								<td align="right"><?php echo $row_mos_pd['importe'];?></td>
+								<td><?php echo $row_mos_pd['cant'];?>
+                   <input name="cant" type="hidden" id="cant" value="<?php echo $row_mos_pd['cant']; ?>">
+                </td>
+								<td align="right"><?php echo $row_mos_pd['precio']; ?>
+                    <input name="precio" type="hidden" id="precio" value="<?php echo $row_mos_pd['precio']; ?>">        
+                </td>
+								<td align="right"><?php echo $row_mos_pd['importe'];?>
+                  <input name="importe" type="hidden" id="importe" value="<?php echo $row_mos_pd['importe']; ?>">        
+                </td>
 								<!--<td><div align="center"><a onclick="return confirm('¿Seguro que desea eliminar?')" href="producto_delete.php?id=<?php echo $row_mos_curso['pro_id']; ?>" title="Eliminar" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Eliminar"><i class="fa fa-trash-o"></i></button></a></div></td>-->
 							  </tr>
 							  <?php } while ($row_mos_pd = mysql_fetch_assoc($mos_pd)); ?>

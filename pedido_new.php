@@ -499,7 +499,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
            
     <script type="text/javascript">
       $(function() {
-        $( "#vis_fecha" ).datepicker({
+        $( "#fecha_ped" ).datepicker({
           defaultDate: "",
           changeMonth: true, 
           numberOfMonths: 1,dateFormat: "dd-mm-yy",
@@ -516,7 +516,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
           dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
           monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
           onClose: function( selectedDate ) {
-            $( "#vis_fecha" ).datepicker( "option", "maxDate", selectedDate );
+            $( "#fecha_ped" ).datepicker( "option", "maxDate", selectedDate );
           }
         });
       });

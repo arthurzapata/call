@@ -335,8 +335,8 @@ if (isset($_GET['n']))
       <td><strong>Vendedor</strong></td>
       <td><strong>Fecha</strong></td>
       <td align="center"><strong >Total</strong></td>
-      <td align="center"><strong> <element>Editar</element></strong></td>
-      <td colspan="2" align="center"><strong>Acciones</strong></td>
+   <!--   <td align="center"><strong> <element>Editar</element></strong></td>
+      <td colspan="2" align="center"><strong>Acciones</strong></td>-->
     </tr>
     <?php do { ?>
       <tr>
@@ -350,9 +350,9 @@ if (isset($_GET['n']))
            $estado = 'success'; else $estado= 'danger'; ?>
       <a href="up_estadoc.php?pk=<?php echo $row_mos_curso['cur_id']; ?>" title="Cambiar Estado" class="hide-option">
             <button class="btn btn-<?php echo $estado?>" type="button" data-toggle="tooltip"></button></a>
-     </td>-->
+     </td>
       <td><div align="center"><a href="producto_edit.php?id=<?php echo $row_mos_curso['pro_id']; ?>" title="Editar" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Editar"><i class="fa fa-edit"></i></button></a></div></td>
-        <td><div align="center"><a onclick="return confirm('¿Seguro que desea eliminar?')" href="producto_delete.php?id=<?php echo $row_mos_curso['pro_id']; ?>" title="Eliminar" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Eliminar"><i class="fa fa-trash-o"></i></button></a></div></td>
+        <td><div align="center"><a onclick="return confirm('¿Seguro que desea eliminar?')" href="producto_delete.php?id=<?php echo $row_mos_curso['pro_id']; ?>" title="Eliminar" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Eliminar"><i class="fa fa-trash-o"></i></button></a></div></td>-->
       </tr>
       <?php } while ($row_mos_curso = mysql_fetch_assoc($mos_curso)); ?>
 

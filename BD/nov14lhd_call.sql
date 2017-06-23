@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-06-2017 a las 17:36:57
+-- Tiempo de generación: 23-06-2017 a las 02:26:05
 -- Versión del servidor: 5.6.21
 -- Versión de PHP: 5.6.3
 
@@ -150,15 +150,14 @@ CREATE TABLE IF NOT EXISTS `call_pedido` (
   `fecha_reg` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `fecha_ped` datetime NOT NULL,
   `requerimiento` text COLLATE utf8_spanish_ci
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `call_pedido`
 --
 
 INSERT INTO `call_pedido` (`nro_pedido`, `cli_id`, `ped_estado`, `cc_vendedor`, `total`, `fecha_reg`, `fecha_ped`, `requerimiento`) VALUES
-(1, 1, 1, 14, '1000.00', '2017-06-21 23:06:15', '2017-06-15 00:00:00', NULL),
-(2, 1, 1, 16, '50.00', '2017-06-21 23:06:18', '2017-06-08 00:00:00', NULL);
+(1, 1, 1, 14, '900.00', '2017-06-23 00:25:10', '2017-06-01 00:00:00', 'se desea desarrollar una pagina a medida para el registro de clientes potenciales');
 
 -- --------------------------------------------------------
 
@@ -179,8 +178,7 @@ CREATE TABLE IF NOT EXISTS `call_pedido_det` (
 --
 
 INSERT INTO `call_pedido_det` (`nro_pedido`, `pro_id`, `cant`, `precio`, `importe`) VALUES
-(1, 2, 1, '800.00', '800.00'),
-(1, 3, 1, '300.00', '300.00');
+(1, 6, 1, '900.00', '900.00');
 
 -- --------------------------------------------------------
 
@@ -342,7 +340,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `telefono` varchar(11) COLLATE utf8_spanish_ci DEFAULT NULL,
   `email` varchar(60) COLLATE utf8_spanish_ci DEFAULT NULL,
   `fecha_reg` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `cliente`
@@ -350,7 +348,8 @@ CREATE TABLE IF NOT EXISTS `cliente` (
 
 INSERT INTO `cliente` (`cli_id`, `nro_doc`, `razon_social`, `direccion`, `telefono`, `email`, `fecha_reg`) VALUES
 (1, '10468645381', 'ARTURO ZAPATA CARRETERO', 'JR. SAN GABINO 2323 SURCO', '943054727', 'azapata@promelsa.com.pe', '2017-06-12 04:36:46'),
-(2, '78565412', 'INGRID VALDERRAMA ALFARO', 'JR SAN GABINO MIRAFLORES', '985655555', 'ingrdivalderrama@gmail.com', '2017-06-21 19:21:35');
+(2, '78565412', 'INGRID VALDERRAMA ALFARO', 'JR SAN GABINO MIRAFLORES', '985655555', 'ingrdivalderrama@gmail.com', '2017-06-21 19:21:35'),
+(3, '87878787', 'ROBERTO SIXTO VALDERRAMA PEREZ', 'JR CACERES HARAMAYO 8990', '89893499439', 'sixto15@hotmail.com', '2017-06-22 22:56:19');
 
 -- --------------------------------------------------------
 
@@ -378,15 +377,7 @@ CREATE TABLE IF NOT EXISTS `documento` (
 --
 
 INSERT INTO `documento` (`cn_serie`, `cn_numero`, `tipo_doc`, `nro_pedido`, `cc_cliente`, `cc_vta`, `cc_moneda`, `fecha_reg`, `cc_vendedor`, `total`, `fecha_ped`, `igv`) VALUES
-('F011', '0000001', '01', 1, 10, 1, '01', '2017-06-22 00:11:26', 14, '118.00', '2017-06-01', NULL),
-('F021', '0000002', '01', 22, 22, 2, '01', '2017-06-22 00:11:23', 14, '338.00', '2017-06-02', NULL),
-('F021', '0000003', '01', 3232, 11, 2, '01', '2017-06-22 00:11:19', 16, '1180.00', '2017-06-02', NULL),
-('F021', '0000004', '01', 354554, 1, 2, '01', '2017-06-22 00:11:17', 14, '600.00', '2017-06-01', NULL),
-('F001', '0000005', '01', 4545, 1, 1, '01', '2017-06-22 00:11:12', 16, '100.00', '2017-06-03', NULL),
-('F011', '0000007', '1', 1, 1, 1, '01', '2017-06-22 14:38:38', 15, '1298.00', '2017-06-21', '198.00'),
-('F011', '0000006', '1', 1, 1, 1, '01', '2017-06-22 00:09:15', 14, NULL, '2017-06-14', NULL),
-('F011', '0000008', '01', 1, 1, 1, '01', '2017-06-22 14:38:33', 13, '1298.00', '2017-06-20', '198.00'),
-('F011', '0000009', '01', 1, 1, 1, '01', '2017-06-22 14:38:18', 12, '1298.00', '2017-06-16', '198.00');
+('F011', '0000001', '01', 1, 1, 1, '01', '2017-06-23 00:25:25', 14, '1062.00', '2017-06-06', '162.00');
 
 -- --------------------------------------------------------
 
@@ -409,7 +400,7 @@ CREATE TABLE IF NOT EXISTS `documento_det` (
 --
 
 INSERT INTO `documento_det` (`cn_item`, `cn_serie`, `cn_numero`, `pro_id`, `cant`, `precio`, `importe`) VALUES
-('1', 'F011', '0000009', 1, 1, '850.00', '980.00');
+('1', 'F011', '0000001', 6, 1, '900.00', '900.00');
 
 -- --------------------------------------------------------
 
@@ -443,17 +434,18 @@ CREATE TABLE IF NOT EXISTS `producto` (
 `pro_id` int(11) NOT NULL,
   `pro_descripcion` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
   `pro_activo` int(11) NOT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `producto`
 --
 
 INSERT INTO `producto` (`pro_id`, `pro_descripcion`, `pro_activo`) VALUES
-(1, 'APLICACIONES MOVILES', 1),
-(2, 'APLICACIONES WEBs', 1),
-(3, 'MARKETING SOCIAL', 1),
-(4, 'PAGINA WEB', 1);
+(1, 'Consultoría & Gestión', 1),
+(2, 'Marketing & Publicidad', 1),
+(3, 'Diseño', 1),
+(6, 'Digital & E-Business', 1),
+(7, 'Otros servicios', 1);
 
 --
 -- Índices para tablas volcadas
@@ -588,7 +580,7 @@ MODIFY `obs_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 -- AUTO_INCREMENT de la tabla `call_pedido`
 --
 ALTER TABLE `call_pedido`
-MODIFY `nro_pedido` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `nro_pedido` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `call_perfil`
 --
@@ -613,12 +605,12 @@ MODIFY `vis_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-MODIFY `cli_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `cli_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-MODIFY `pro_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+MODIFY `pro_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- Restricciones para tablas volcadas
 --
