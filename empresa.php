@@ -31,7 +31,7 @@ if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
 if (!isset($_SESSION)) {
   session_start();
 }
-$MM_authorizedUsers = "1,3,4";
+$MM_authorizedUsers = "1,2,3,4";
 $MM_donotCheckaccess = "false";
 
 // *** Restrict Access To Page: Grant or deny access to this page
