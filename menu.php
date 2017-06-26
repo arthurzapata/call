@@ -27,12 +27,12 @@
                        </li>
                        <!--End Menu reg-->
                           <li class="dropdown notifications-menu">
-                            <?php if ($perid != 2) { ?>
+                            <?php /*if ($perid != 2) { */?>
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-gear"></i> Procesos
                                 <!--<span class="label label-warning">10</span>-->
                             </a>
-                            <?php } ?>
+                            <?php/* }*/ ?>
                             <ul class="dropdown-menu">
                                 <!--<li class="header">You have 10 notifications</li>-->
                                 <li>
