@@ -366,7 +366,8 @@ if (isset($_GET['n']))
       <td><strong>Documento</strong></td>
       <td><strong>Tipo Doc</strong></td>
       <td><strong>Pedido</strong></td>
-      <td><strong>Cliente</strong></td>
+      <td><strong>DNI / RUC</strong></td>
+      <td><strong>Nombre / Razon Social</strong></td>
       <td><strong>Vendedor</strong></td>
       <td><strong>Fecha</strong></td>
       <td align="center"><strong >Total</strong></td>
@@ -378,7 +379,8 @@ if (isset($_GET['n']))
         <td><?php echo $row_mos_curso['cn_serie'].' - '.$row_mos_curso['cn_numero']; ?></td>
         <td><?php echo $row_mos_curso['tipo_doc'] == '01'?  'FACTURA' : 'BOLETA'; ?></td>
         <td><?php echo $row_mos_curso['nro_pedido'];?></td>
-        <td><?php echo $row_mos_curso['nro_doc'].'-'.$row_mos_curso['razon_social']; ?></td>
+        <td><?php echo $row_mos_curso['nro_doc'];?>
+        <td><?php echo $row_mos_curso['razon_social']; ?></td>
         <td><?php echo $row_mos_curso['usu_nombre'];?></td>
         <td><?php echo $row_mos_curso['fecha_ped'];?></td>
         <td align="right"><?php echo $row_mos_curso['total']; ?></td>

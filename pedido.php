@@ -331,7 +331,8 @@ if (isset($_GET['n']))
 
     <tr>
       <td><strong>N° Pedido</strong></td>
-      <td><strong>Cliente</strong></td>
+      <td><strong>DNI / RUC</strong></td>
+      <td><strong>Nombre / Razon Social</strong></td>
       <td><strong>Vendedor</strong></td>
       <td><strong>Fecha</strong></td>
       <td align="center"><strong >Total</strong></td>
@@ -341,7 +342,8 @@ if (isset($_GET['n']))
     <?php do { ?>
       <tr>
         <td><?php echo $row_mos_curso['nro_pedido']; ?></td>
-        <td><?php echo $row_mos_curso['nro_doc'].'-'.$row_mos_curso['razon_social']; ?></td>
+        <td><?php echo $row_mos_curso['nro_doc']; ?></td>
+        <td><?php echo $row_mos_curso['razon_social']; ?></td>
         <td><?php echo $row_mos_curso['usu_nombre'];?></td>
         <td><?php echo $row_mos_curso['fecha_ped'];?></td>
         <td align="right"><?php echo $row_mos_curso['total']; ?></td>
