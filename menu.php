@@ -40,15 +40,6 @@
                                     <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto;">
                                     <ul class="menu" style="overflow: hidden; width: 100%;">
 
-                                     <?php if ($perid == 1 or $perid == 4) { ?>
-                                        <li>
-                                            <a href="derivar.php">
-                                                <i class="fa fa-exchange"></i> Derivar
-                                            </a>
-                                        </li>
-                                      <?php } ?>
-
-                                        <?php if ($perid == 3) { ?>
                                         <li>
                                             <a href="ppto.php">
                                                 <i class="fa fa-upload danger"></i> PPTO por Vendedor
@@ -70,9 +61,7 @@
                                             </a>
                                         </li>
 
-                                        <?php } ?>
-
-                                     
+  
                                     </ul><div class="slimScrollBar" style="width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; z-index: 99; right: 1px; height: 156.86274509803923px; background: rgb(0, 0, 0);"></div><div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; opacity: 0.2; z-index: 90; right: 1px; background: rgb(51, 51, 51);"></div></div>
                                 </li>
                                 <li class="footer"><!--<a href="#">View all</a>--></li>
