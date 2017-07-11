@@ -371,8 +371,9 @@ if (isset($_GET['n']))
       <td><strong>Vendedor</strong></td>
       <td><strong>Fecha</strong></td>
       <td align="center"><strong >Total</strong></td>
+     <td colspan="2" align="center"><strong>Acciones</strong></td>
      <td align="center"><strong> <element>Documento</element></strong></td>
-      <!-- <td colspan="2" align="center"><strong>Acciones</strong></td>-->
+    
     </tr>
     <?php do { ?>
       <tr>
@@ -384,14 +385,16 @@ if (isset($_GET['n']))
         <td><?php echo $row_mos_curso['usu_nombre'];?></td>
         <td><?php echo $row_mos_curso['fecha_ped'];?></td>
         <td align="right"><?php echo $row_mos_curso['total']; ?></td>
-       
-     <td><div align="center"><a href="documento.php?ser=<?php echo $row_mos_curso['cn_serie'].'&nro='.$row_mos_curso['cn_numero']; ?>" title="Ver Documento" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Ver Documento"><i class="fa fa-file"></i></button></a></div></td>
+           <td><div align="center"><a href="pedido_edit.php?id=<?php echo $row_mos_curso['nro_pedido']; ?>" title="Editar" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Editar"><i class="fa fa-edit"></i></button></a></div></td>
+        <td><div align="center"><a onclick="return confirm('¿Seguro que desea anular?')" href="pedido_delete.php?id=<?php echo $row_mos_curso['nro_pedido']; ?>" title="Anular" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Anular"><i class="fa fa-trash-o"></i></button></a></div></td>
+
+     <td><div align="center"><a href="documento.php?ser=<?php echo $row_mos_curso['cn_serie'].'&nro='.$row_mos_curso['cn_numero']; ?>" title="Ver Documento" class="hide-option"><button class="btn btn-success btn-xs" type="button" data-toggle="tooltip" data-title="Ver Documento"><i class="fa fa-file"></i></button></a></div></td>
      <!--<td><div align="center"><a onclick="return confirm('¿Seguro que desea eliminar?')" href="producto_delete.php?id=<?php echo $row_mos_curso['pro_id']; ?>" title="Eliminar" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Eliminar"><i class="fa fa-trash-o"></i></button></a></div></td>-->
       </tr>
       <?php } while ($row_mos_curso = mysql_fetch_assoc($mos_curso)); ?>
 
     <tr>
-      <td colspan="10">
+      <td colspan="11">
         <div class="row">
             <div class="col-md-6">
         <table>
