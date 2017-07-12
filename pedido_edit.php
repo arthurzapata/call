@@ -173,6 +173,11 @@ INNER JOIN producto c ON r.cur_id = c.pro_id WHERE r.reg_id =". $colname_mos_reg
 $mos_registro = mysql_query($query_mos_registro, $conexion) or die(mysql_error());
 $row_mos_registro = mysql_fetch_assoc($mos_registro);
 $totalRows_mos_registro = mysql_num_rows($mos_registro);
+//detalle
+$query_mos_detalle = "select nro_pedido,pro_id, precio, cant,importe from call_pedido_det where nro_pedido =". $colname_mos_registro."";
+$mos_detalle = mysql_query($query_mos_detalle, $conexion) or die(mysql_error());
+$row_mos_detalle = mysql_fetch_assoc($mos_detalle);
+$totalRows_mos_detalle = mysql_num_rows($mos_detalle);
 //
 $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
@@ -186,25 +191,28 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form1")) {
   
   $importe = $_POST['cantidad'] * $_POST['precio'];
 
-  $updateSQL = sprintf("UPDATE call_pedido SET est_id=%s, cur_id=%s, reg_apellidos=%s, reg_nombres=%s, reg_formacion=%s, reg_observaciones=%s,usu_id =%s, reg_pais=%s, reg_email=%s, reg_telefono=%s WHERE reg_id=%s",
-                       GetSQLValueString($est, "int"),
-                       GetSQLValueString($_POST['cur_id'], "int"),
-                       GetSQLValueString($_POST['reg_apellidos'], "text"),
-                       GetSQLValueString($_POST['reg_nombres'], "text"),
-                       GetSQLValueString($_POST['reg_formacion'], "text"),
-                       GetSQLValueString($_POST['reg_observaciones'], "text"),
-                       GetSQLValueString($_POST['usu_id'], "int"),
-                       GetSQLValueString($_POST['reg_pais'], "text"),
-                       GetSQLValueString($_POST['reg_email'], "text"),
-                       GetSQLValueString($_POST['reg_telefono'], "text"),
-                       GetSQLValueString($_POST['reg_id'], "int"));
+  $updateSQL = sprintf("UPDATE call_pedido SET cc_vendedor=%s, total=%s, fecha_ped=%s, requerimiento=%s WHERE nro_pedido=%s",
+              GetSQLValueString($_POST['cc_vendedor'], "int"),
+              GetSQLValueString($importe, "decimal"), //total
+              GetSQLValueString($fechaconver,"date"),
+              GetSQLValueString($_POST['requerimiento'], "text"),
+              GetSQLValueString($_POST['nro_pedido'], "int"));
 
   mysql_select_db($database_conexion, $conexion);
   $Result1 = mysql_query($updateSQL, $conexion) or die(mysql_error());
  //
+  $updateSQL2 = sprintf("UPDATE call_pedido_det SET pro_id=%s, cant=%s, precio=%s, importe=%s WHERE nro_pedido=%s",
+             
+             GetSQLValueString($_POST['pro_id'], "int"),
+             GetSQLValueString($_POST['cantidad'], "int"),
+             GetSQLValueString($_POST['precio'], "double"),
+             GetSQLValueString($importe, "double"),
+             GetSQLValueString($_POST['nro_pedido'], "int"));
+  $Result2 = mysql_query($updateSQL2, $conexion) or die(mysql_error());
+
   $m = 'Registro Actualizado Correctamente';
   //
-  $updateGoTo = "index.php?n=$m";
+  $updateGoTo = "pedido.php?n=$m";
   if (isset($_SERVER['QUERY_STRING'])) {
     $updateGoTo .= (strpos($updateGoTo, '?')) ? "&" : "?";
     $updateGoTo .= $_SERVER['QUERY_STRING'];
@@ -507,9 +515,11 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                         <div class="form-group">Producto o Servicio:
                             <select name="pro_id" id="pro_id" class="form-control">
                               <?php
-                              do
-                              { 
-                                echo '<option value="'.$row_lista_prod['pro_id'].'">'.$row_lista_prod['pro_descripcion'].'</option>';
+                              do{ ?>
+                                <option value="<?php echo $row_lista_prod['pro_id'];?>"
+                                <?php if (!(strcmp($row_lista_prod['pro_id'], htmlentities($row_mos_detalle['pro_id'], ENT_COMPAT, 'UTF-8')))) {echo "SELECTED";} ?>>
+                                <?php echo $row_lista_prod['pro_descripcion'];?></option>;
+                              <?php  
                               } while ($row_lista_prod = mysql_fetch_assoc($lista_prod));              
                               ?>
                             </select>
@@ -517,11 +527,11 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                      </div>
                      <div class="col-md-3">
                        <div class="form-group">Precio:
-                             <input type="text" id="precio" name="precio" value="" class="form-control"  required>
+                             <input type="text" id="precio" name="precio" value="<?php echo $row_mos_detalle['precio'];?>" class="form-control"  required>
                        </div>
                      </div>
                      <div class="col-md-3">Cantidad
-                          <input type="number" id="cantidad" name="cantidad" value="1" class="form-control" min="1" required>
+                          <input type="number" id="cantidad" name="cantidad" value="<?php echo $row_mos_detalle['cant'];?>" class="form-control" min="1" required>
                      </div>
                     <!--<div class="col-md-2">Importe
                           <input type="text" id="cantidad" name="cantidad" value="" class="form-control"  required>
@@ -530,7 +540,8 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
         <div class="box-footer">
               <button type="submit" class="btn btn-primary pull-left"><i class="fa fa-save"></i> Guardar</button>
               <a href="pedido.php" style="margin-left:10px;"><button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button></a>
-              <input type="hidden" name="MM_insert" value="form1">
+              <input type="hidden" name="MM_update" value="form1">
+                 <input type="hidden" name="nro_pedido" value="<?php echo $row_mos_registro['nro_pedido']; ?>">
           </div>   
 
                  </form>
