@@ -132,7 +132,7 @@ if(isset($_POST['from']))
 	//
     $query1 = "CREATE TEMPORARY TABLE tmp_vtas as
 SELECT p.fecha_ped,p.cc_vendedor,u.usu_nombre,count(1) as cantventa from documento p
-left join call_usuario u on p.cc_vendedor = u.usu_id  where p.fecha_ped between '".$fromconver."' and '".$toconver."'
+left join call_usuario u on p.cc_vendedor = u.usu_id where p.fecha_ped between '".$fromconver."' and '".$toconver."'  and p.estado=1 
 group by p.fecha_ped,u.usu_nombre;";
 	mysql_query($query1, $conexion) or die(mysql_error());
 

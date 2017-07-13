@@ -212,8 +212,8 @@ $idped = $row_nro_ped['nroped'];
   $fecha_remitido = $_POST['fecha_ped'];
   $fechaconver = implode('-',array_reverse(explode('-', $fecha_remitido)));
 
-  	$insertSQL = sprintf("INSERT INTO documento (cn_serie, cn_numero,tipo_doc, nro_pedido, cc_cliente, cc_vta, cc_moneda, cc_vendedor,igv, total, fecha_ped) 
-  						VALUES (%s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s)",
+  	$insertSQL = sprintf("INSERT INTO documento (cn_serie, cn_numero,tipo_doc, nro_pedido, cc_cliente, cc_vta, cc_moneda, cc_vendedor,igv, total, fecha_ped,estado) 
+  						VALUES (%s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s)",
                           GetSQLValueString($_POST['serie'], "text"), 
                        	  GetSQLValueString($idped, "text"), //numero
                        	  GetSQLValueString($_POST['tipo_doc'], "text"),
@@ -224,7 +224,8 @@ $idped = $row_nro_ped['nroped'];
 						              GetSQLValueString($_POST['cc_vendedor'], "int"),
                           GetSQLValueString($_POST['igv'],"double"),
                           GetSQLValueString($_POST['total'],"double"),
-						              GetSQLValueString($fechaconver,"date"));
+						              GetSQLValueString($fechaconver,"date"),
+                          GetSQLValueString(1,"int"));
   mysql_select_db($database_conexion, $conexion);
   $Result1 = mysql_query($insertSQL, $conexion) or die(mysql_error());
   //detalle

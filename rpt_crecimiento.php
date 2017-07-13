@@ -130,8 +130,8 @@ if(isset($_POST['from']))
     $fromconver = implode('-',array_reverse(explode('-', $from)));
     $toconver = implode('-',array_reverse(explode('-', $to)));
 
-    $query_mos_curso = "SELECT p.fecha,u.usu_nombre,sum(total) as venta, monto, ((sum(total)/ monto) - 1) * 100 as crec from ppto p left join call_usuario u on p.usu_id = u.usu_id left join documento d on p.usu_id = d.cc_vendedor and p.fecha = d.fecha_ped 
-      where p.fecha between '".$fromconver."' and '".$toconver."' group by p.fecha,u.usu_nombre";
+    $query_mos_curso = "SELECT p.fecha,u.usu_nombre,sum(total) as venta, monto, ((sum(total)/ monto) - 1) * 100 as crec from ppto p left join call_usuario u on p.usu_id = u.usu_id left join documento d on p.usu_id = d.cc_vendedor and p.fecha = d.fecha_ped and d.estado=1
+      where p.fecha between '".$fromconver."' and '".$toconver."'   group by p.fecha,u.usu_nombre";
     $mos_curso = mysql_query($query_mos_curso, $conexion) or die(mysql_error());
     $row_mos_curso = mysql_fetch_assoc($mos_curso);
     $totalRows_mos_curso = mysql_num_rows($mos_curso);

@@ -132,7 +132,7 @@ if(isset($_POST['from']))
 
     mysql_select_db($database_conexion, $conexion);
     $query_mos_user = "select date(fecha_reg) as fecha, sum(total) as total from documento 
-    where fecha_reg between '".$fromconver."' and '".$toconver."' group by date(fecha_reg)";
+    where fecha_reg between '".$fromconver."' and '".$toconver."' and estado=1 group by date(fecha_reg)";
     $mos_user = mysql_query($query_mos_user, $conexion) or die(mysql_error());
     $row_mos_user = mysql_fetch_assoc($mos_user);
 }
