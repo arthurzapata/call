@@ -131,7 +131,7 @@ if (isset($_GET['pageNum_mos_curso'])) {
 $startRow_mos_curso = $pageNum_mos_curso * $maxRows_mos_curso;
 
 mysql_select_db($database_conexion, $conexion);
-$query_mos_curso = "SELECT cn_serie,cn_numero,tipo_doc,nro_pedido,c.nro_doc,c.razon_social,cc_vta,cc_moneda,d.fecha_reg,u.usu_nombre, total,fecha_ped FROM documento d left join cliente c on d.cc_cliente =c.cli_id 
+$query_mos_curso = "SELECT cn_serie,cn_numero,tipo_doc,nro_pedido,c.nro_doc,c.razon_social,cc_vta,cc_moneda,d.fecha_reg,u.usu_nombre, total,fecha_ped,estado FROM documento d left join cliente c on d.cc_cliente =c.cli_id 
 left join call_usuario u on d.cc_vendedor = u.usu_id order by d.fecha_reg desc";
 $query_limit_mos_curso = sprintf("%s LIMIT %d, %d", $query_mos_curso, $startRow_mos_curso, $maxRows_mos_curso);
 $mos_curso = mysql_query($query_limit_mos_curso, $conexion) or die(mysql_error());
@@ -153,7 +153,7 @@ if (isset($_POST['from'])) {
     $toconver = implode('-',array_reverse(explode('-', $to)));
 
     mysql_select_db($database_conexion, $conexion);
-  $query_mos_curso = "SELECT cn_serie,cn_numero,tipo_doc,nro_pedido,c.nro_doc,c.razon_social,cc_vta,cc_moneda,d.fecha_reg,u.usu_nombre, total,fecha_ped FROM documento d left join cliente c on d.cc_cliente =c.cli_id 
+  $query_mos_curso = "SELECT cn_serie,cn_numero,tipo_doc,nro_pedido,c.nro_doc,c.razon_social,cc_vta,cc_moneda,d.fecha_reg,u.usu_nombre, total,fecha_ped,estado FROM documento d left join cliente c on d.cc_cliente =c.cli_id 
 left join call_usuario u on d.cc_vendedor = u.usu_id where fecha_ped between '". $fromconver."' and '". $toconver ."' order by d.fecha_reg desc";
   $mos_curso = mysql_query($query_mos_curso, $conexion) or die(mysql_error());
   $row_mos_curso = mysql_fetch_assoc($mos_curso);
@@ -371,6 +371,7 @@ if (isset($_GET['n']))
       <td><strong>Vendedor</strong></td>
       <td><strong>Fecha</strong></td>
       <td align="center"><strong >Total</strong></td>
+      <td align="center"><strong >Estado</strong></td>
      <td colspan="2" align="center"><strong>Acciones</strong></td>
      <td align="center"><strong> <element>Documento</element></strong></td>
     
@@ -385,6 +386,7 @@ if (isset($_GET['n']))
         <td><?php echo $row_mos_curso['usu_nombre'];?></td>
         <td><?php echo $row_mos_curso['fecha_ped'];?></td>
         <td align="right"><?php echo $row_mos_curso['total']; ?></td>
+        <td align="right"><?php echo $row_mos_curso['estado']== 1 ? 'EMITIDO' : 'ANULADO'; ?></td>
            <td><div align="center"><a href="documento_edit.php?ser=<?php echo $row_mos_curso['cn_serie'].'&nro='.$row_mos_curso['cn_numero']; ?>" title="Editar" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Editar"><i class="fa fa-edit"></i></button></a></div></td>
         <td><div align="center"><a onclick="return confirm('¿Seguro que desea anular?')" href="doc_delete.php?ser=<?php echo $row_mos_curso['cn_serie'].'&nro='.$row_mos_curso['cn_numero']; ?>" title="Anular" class="hide-option"><button class="btn btn-primary btn-xs" type="button" data-toggle="tooltip" data-title="Anular"><i class="fa fa-trash-o"></i></button></a></div></td>
 
@@ -394,7 +396,7 @@ if (isset($_GET['n']))
       <?php } while ($row_mos_curso = mysql_fetch_assoc($mos_curso)); ?>
 
     <tr>
-      <td colspan="11">
+      <td colspan="12">
         <div class="row">
             <div class="col-md-6">
         <table>

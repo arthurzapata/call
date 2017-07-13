@@ -33,8 +33,9 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
 
 if ((isset($_GET['ser'])) && ($_GET['ser'] != "")) {
   mysql_select_db($database_conexion, $conexion);
- /* $deleteSQL = sprintf("update documento set ped_estado = 0 WHERE nro_pedido=%s",
-                       GetSQLValueString($_GET['id'], "int"));*/
+  $deleteSQL = sprintf("update documento set estado = 0 WHERE cn_serie=%s and cn_numero=%s",
+                       GetSQLValueString($_GET['ser'], "text"),
+                       GetSQLValueString($_GET['nro'], "text"));
   $Result1 = mysql_query($deleteSQL, $conexion) or die(mysql_error());
 
   $deleteGoTo = "documentos.php";
