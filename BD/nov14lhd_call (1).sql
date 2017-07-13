@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-06-2017 a las 02:26:05
+-- Tiempo de generación: 13-07-2017 a las 03:13:08
 -- Versión del servidor: 5.6.21
 -- Versión de PHP: 5.6.3
 
@@ -157,7 +157,10 @@ CREATE TABLE IF NOT EXISTS `call_pedido` (
 --
 
 INSERT INTO `call_pedido` (`nro_pedido`, `cli_id`, `ped_estado`, `cc_vendedor`, `total`, `fecha_reg`, `fecha_ped`, `requerimiento`) VALUES
-(1, 1, 1, 14, '900.00', '2017-06-23 00:25:10', '2017-06-01 00:00:00', 'se desea desarrollar una pagina a medida para el registro de clientes potenciales');
+(2, 2, 0, 14, '1500.00', '2017-07-13 00:52:59', '2017-07-06 00:00:00', '                       eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeedddddddsssssssssssdddddddddddd                       '),
+(1, 1, 1, 7, '1900.00', '2017-07-12 17:53:52', '2017-06-01 00:00:00', '                                                                     se desea desarrollar una pagina a medida para el registro de clientes potenciales             cgggggg                                                                                                      '),
+(3, 3, 1, 15, '1000.00', '2017-07-13 01:06:15', '2017-07-01 00:00:00', '                       ddddddddddddddddddddd'),
+(4, 4, 1, 16, '2444.00', '2017-07-13 01:11:06', '2017-07-05 00:00:00', '33333333sd d');
 
 -- --------------------------------------------------------
 
@@ -178,7 +181,10 @@ CREATE TABLE IF NOT EXISTS `call_pedido_det` (
 --
 
 INSERT INTO `call_pedido_det` (`nro_pedido`, `pro_id`, `cant`, `precio`, `importe`) VALUES
-(1, 6, 1, '900.00', '900.00');
+(4, 1, 2, '1222.00', '2444.00'),
+(3, 2, 1, '1000.00', '1000.00'),
+(2, 1, 1, '1500.00', '1500.00'),
+(1, 2, 1, '1900.00', '1900.00');
 
 -- --------------------------------------------------------
 
@@ -340,7 +346,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `telefono` varchar(11) COLLATE utf8_spanish_ci DEFAULT NULL,
   `email` varchar(60) COLLATE utf8_spanish_ci DEFAULT NULL,
   `fecha_reg` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `cliente`
@@ -349,7 +355,8 @@ CREATE TABLE IF NOT EXISTS `cliente` (
 INSERT INTO `cliente` (`cli_id`, `nro_doc`, `razon_social`, `direccion`, `telefono`, `email`, `fecha_reg`) VALUES
 (1, '10468645381', 'ARTURO ZAPATA CARRETERO', 'JR. SAN GABINO 2323 SURCO', '943054727', 'azapata@promelsa.com.pe', '2017-06-12 04:36:46'),
 (2, '78565412', 'INGRID VALDERRAMA ALFARO', 'JR SAN GABINO MIRAFLORES', '985655555', 'ingrdivalderrama@gmail.com', '2017-06-21 19:21:35'),
-(3, '87878787', 'ROBERTO SIXTO VALDERRAMA PEREZ', 'JR CACERES HARAMAYO 8990', '89893499439', 'sixto15@hotmail.com', '2017-06-22 22:56:19');
+(3, '87878787', 'ROBERTO SIXTO VALDERRAMA PEREZ', 'JR CACERES HARAMAYO 8990', '89893499439', 'sixto15@hotmail.com', '2017-06-22 22:56:19'),
+(4, '11223344', 'LHEOWEBGLOBAL SAC', 'ATE VITARTE JKJJK ', '032323', 'pollito@lheoweb.com', '2017-07-13 01:10:43');
 
 -- --------------------------------------------------------
 
@@ -369,15 +376,20 @@ CREATE TABLE IF NOT EXISTS `documento` (
   `cc_vendedor` int(11) NOT NULL,
   `total` decimal(18,2) DEFAULT NULL,
   `fecha_ped` date NOT NULL,
-  `igv` decimal(18,2) DEFAULT NULL
+  `igv` decimal(18,2) DEFAULT NULL,
+  `estado` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `documento`
 --
 
-INSERT INTO `documento` (`cn_serie`, `cn_numero`, `tipo_doc`, `nro_pedido`, `cc_cliente`, `cc_vta`, `cc_moneda`, `fecha_reg`, `cc_vendedor`, `total`, `fecha_ped`, `igv`) VALUES
-('F011', '0000001', '01', 1, 1, 1, '01', '2017-06-23 00:25:25', 14, '1062.00', '2017-06-06', '162.00');
+INSERT INTO `documento` (`cn_serie`, `cn_numero`, `tipo_doc`, `nro_pedido`, `cc_cliente`, `cc_vta`, `cc_moneda`, `fecha_reg`, `cc_vendedor`, `total`, `fecha_ped`, `igv`, `estado`) VALUES
+('F011', '0000001', '01', 1, 1, 1, '01', '2017-07-13 00:40:05', 14, '1062.00', '2017-06-06', '162.00', 1),
+('F011', '0000002', '01', 2, 2, 1, '01', '2017-07-13 00:40:05', 6, '1770.00', '2017-07-06', '270.00', 1),
+('F011', '0000003', '01', 2, 2, 1, '01', '2017-07-13 00:54:15', 14, '1770.00', '2017-06-01', '270.00', 0),
+('F011', '0000004', '01', 2, 2, 1, '01', '2017-07-13 00:56:06', 14, '1770.00', '2017-06-01', '270.00', 1),
+('F011', '0000005', '01', 4, 4, 1, '01', '2017-07-13 01:12:56', 16, '2883.92', '2017-07-07', '439.92', 1);
 
 -- --------------------------------------------------------
 
@@ -400,7 +412,11 @@ CREATE TABLE IF NOT EXISTS `documento_det` (
 --
 
 INSERT INTO `documento_det` (`cn_item`, `cn_serie`, `cn_numero`, `pro_id`, `cant`, `precio`, `importe`) VALUES
-('1', 'F011', '0000001', 6, 1, '900.00', '900.00');
+('1', 'F011', '0000003', 1, 1, '1500.00', '1500.00'),
+('1', 'F011', '0000002', 1, 1, '1500.00', '1500.00'),
+('1', 'F011', '0000001', 6, 1, '900.00', '900.00'),
+('1', 'F011', '0000004', 1, 1, '1500.00', '1500.00'),
+('1', 'F011', '0000005', 1, 2, '1222.00', '2444.00');
 
 -- --------------------------------------------------------
 
@@ -605,7 +621,7 @@ MODIFY `vis_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-MODIFY `cli_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `cli_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --

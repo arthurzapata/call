@@ -466,7 +466,7 @@ $idped = $row_nro_ped['nroped'];
               </div>
             <div class="col-md-8">
                   <div class="form-group">Vendedor :
-                       <select name="cc_vendedor" id="cc_vendedor" class="form-control">
+                    <select name="cc_vendedor" id="cc_vendedor" class="form-control">
                             <?php
                             echo '<option value="0">-- Seleccione --</option>';           
                             do
@@ -475,17 +475,19 @@ $idped = $row_nro_ped['nroped'];
                                   } while ($row_lista_user = mysql_fetch_assoc($lista_user));              
                                   ?>
                           </select>
-                       <!--
-              <select name="cc_vendedor" id="cc_vendedor" class="form-control">
-                                  <?php 
-do {  
-?>
-                                  <option value="<?php echo $row_lista_user['usu_id']?>" <?php if (!(strcmp($row_lista_user['usu_id'], htmlentities($row_mos_curso['cc_vendedor'], ENT_COMPAT, 'UTF-8')))) {echo "SELECTED";} ?>><?php echo $row_lista_user['usu_nombre']?></option>
-                                  <?php
-} while ($row_lista_user = mysql_fetch_assoc($lista_user));
-?>
-                                </select>
+               <!-- 
+                              <select name="cc_vendedor" id="cc_vendedor" class="form-control">
+                      <?php 
+                      do{ ?>
+                               <option value="<?php echo $row_lista_user['usu_id']?>" 
+                                  <?php if (!(strcmp($row_lista_user['usu_id'], htmlentities($row_mos_curso['cc_vendedor'], ENT_COMPAT, 'UTF-8')))) {echo "SELECTED";} ?>>
+                                  <?php echo $row_lista_user['usu_nombre']?></option>
+                      <?php  
+                      } while ($row_lista_user = mysql_fetch_assoc($lista_user));              
+                      ?>
+                    </select>
  -->
+
 
                   </div>
                   </div></div>
