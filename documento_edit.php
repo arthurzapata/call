@@ -161,15 +161,19 @@ $query_mos_pd = "SELECT nro_pedido, d.pro_id, p.pro_descripcion, cant, precio, i
 if (isset($_POST['buscar'])) {
   mysql_select_db($database_conexion, $conexion);
   $query_mos_curso = "SELECT nro_pedido,p.cli_id,c.nro_doc,c.razon_social,ped_estado,cc_vendedor,u.usu_nombre,total FROM call_pedido p inner join cliente c on p.cli_id = c.cli_id
-	inner join call_usuario u on p.cc_vendedor = u.usu_id where nro_pedido = ".$_POST['buscar']."";
+	inner join call_usuario u on p.cc_vendedor = u.usu_id where nro_pedido = ".$_POST['buscar']." and ped_estado=1";
   $mos_curso = mysql_query($query_mos_curso, $conexion) or die(mysql_error());
   $row_mos_curso = mysql_fetch_assoc($mos_curso);
+  $totalRows_mos_curso = mysql_num_rows($mos_curso);
 
-  $query_mos_pd = "SELECT nro_pedido, d.pro_id, p.pro_descripcion, cant, precio, importe FROM call_pedido_det d LEFT JOIN producto p on d.pro_id = p.pro_id
-  where nro_pedido =" .$_POST['buscar']."";
-  $mos_pd = mysql_query($query_mos_pd, $conexion) or die(mysql_error());
-  $row_mos_pd = mysql_fetch_assoc($mos_pd);
-  $totalRows_mos_pd = mysql_num_rows($mos_pd);
+  if ($totalRows_mos_curso > 0) {
+      $query_mos_pd = "SELECT nro_pedido, d.pro_id, p.pro_descripcion, cant, precio, importe 
+      FROM call_pedido_det d LEFT JOIN producto p on d.pro_id = p.pro_id  where nro_pedido =" .$_POST['buscar']."";
+      $mos_pd = mysql_query($query_mos_pd, $conexion) or die(mysql_error());
+      $row_mos_pd = mysql_fetch_assoc($mos_pd);
+      $totalRows_mos_pd = mysql_num_rows($mos_pd);  
+  }
+  
 }
 
 //vendedores
@@ -192,7 +196,7 @@ if (isset($_GET['ser'])) {
 }
 mysql_select_db($database_conexion, $conexion);
 $query_mos_registro = "select cn_serie,cn_numero,tipo_doc, nro_pedido,p.cc_cliente,cc_moneda,DATE_FORMAT(fecha_ped,'%e-%m-%Y') as fecha_ped,
-c.nro_doc,c.razon_social,p.cc_vendedor from documento p left join cliente c on p.cc_cliente=c.cli_id where cn_serie ='". $ser."' and cn_numero='".$num."'";
+c.nro_doc,c.razon_social,p.cc_vendedor,estado from documento p left join cliente c on p.cc_cliente=c.cli_id where cn_serie ='". $ser."' and cn_numero='".$num."'";
 $mos_registro = mysql_query($query_mos_registro, $conexion) or die(mysql_error());
 $row_mos_registro = mysql_fetch_assoc($mos_registro);
 $totalRows_mos_registro = mysql_num_rows($mos_registro);
@@ -454,10 +458,18 @@ if (isset($_GET['n']))
 					  <div class="col-md-2">Moneda
                 <div class="form-group"><input type="text" name="numero" value="PEN" class="form-control"  readonly> </div>
               </div>
-              <div class="col-md-2">N° Pedido
+              <div class="col-md-1">N° Pedido
                 <div class="form-group"><input type="text" name="nroped" value="<?php echo htmlentities(@$row_mos_registro['nro_pedido'], ENT_COMPAT, 'UTF-8'); ?>" class="form-control" readonly> </div>
               </div>
-            <div class="col-md-8">
+               <div class="col-md-2">Estado
+                <div class="form-group">
+  <select name="estado" id="estado" class="form-control">
+    <option value="1" <?php if ($row_mos_registro['estado'] == 1) { echo "SELECTED";} ?>>EMITIDO</option>
+    <option value="0" <?php if ($row_mos_registro['estado'] == 0) { echo "SELECTED";}?>>ANULADO</option>
+  </select>
+                </div>
+              </div>
+            <div class="col-md-7">
                   <div class="form-group">Vendedor :
                       <select name="cc_vendedor" id="cc_vendedor" class="form-control">
                       <?php 
