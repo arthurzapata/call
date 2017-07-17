@@ -223,9 +223,10 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form1")) {
   $fechaconver = implode('-',array_reverse(explode('-', $fecha_remitido)));
   
 
-  $updateSQL = sprintf("UPDATE documento SET cc_vendedor=%s, fecha_ped=%s where cn_serie =%s and cn_numero=%s",
+  $updateSQL = sprintf("UPDATE documento SET cc_vendedor=%s, fecha_ped=%s, estado=%s where cn_serie =%s and cn_numero=%s",
               GetSQLValueString($_POST['cc_vendedor'], "int"),
               GetSQLValueString($fechaconver, "date"),
+              GetSQLValueString($_POST['estado'], "int"),
               GetSQLValueString($ser, "text"),
               GetSQLValueString($num, "text"));
   mysql_select_db($database_conexion, $conexion);
@@ -464,8 +465,8 @@ if (isset($_GET['n']))
                <div class="col-md-2">Estado
                 <div class="form-group">
   <select name="estado" id="estado" class="form-control">
-    <option value="1" <?php if ($row_mos_registro['estado'] == 1) { echo "SELECTED";} ?>>EMITIDO</option>
-    <option value="0" <?php if ($row_mos_registro['estado'] == 0) { echo "SELECTED";}?>>ANULADO</option>
+    <option value="1" <?php if($row_mos_registro['estado'] == 1) { echo "SELECTED";}?>>EMITIDO</option>
+    <option value="0" <?php if($row_mos_registro['estado'] == 0) { echo "SELECTED";}?>>ANULADO</option>
   </select>
                 </div>
               </div>

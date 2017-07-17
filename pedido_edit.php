@@ -191,11 +191,12 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form1")) {
   
   $importe = $_POST['cantidad'] * $_POST['precio'];
 
-  $updateSQL = sprintf("UPDATE call_pedido SET cc_vendedor=%s, total=%s, fecha_ped=%s, requerimiento=%s WHERE nro_pedido=%s",
+  $updateSQL = sprintf("UPDATE call_pedido SET cc_vendedor=%s, total=%s, fecha_ped=%s, requerimiento=%s, ped_estado=%s WHERE nro_pedido=%s",
               GetSQLValueString($_POST['cc_vendedor'], "int"),
               GetSQLValueString($importe, "decimal"), //total
               GetSQLValueString($fechaconver,"date"),
               GetSQLValueString($_POST['requerimiento'], "text"),
+              GetSQLValueString($_POST['ped_estado'], "int"),
               GetSQLValueString($_POST['nro_pedido'], "int"));
 
   mysql_select_db($database_conexion, $conexion);
@@ -433,7 +434,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                 
                 <div class="box box-primary">
                                 
-                  <div class="box-header"> <h3 class="box-title"> Editar Pedido </h3></div>
+                  <div class="box-header"> <h3 class="box-title"> Editar Pedido N° <?php echo $colname_mos_registro;?>  </h3></div>
                    
                   <div class="box-body">
                   <div class="row" style="margin-bottom:10px;">
@@ -469,8 +470,13 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                   <div class="form-group">Estado:
                     <div class="input-group">
                         <div class="input-group-addon">
-                           <i class="fa fa-calendar"></i></div>
-                         <input type="text" id="estado" name="estado" value="<?php echo $row_mos_registro['ped_estado']==1 ? 'EMITIDO': 'ANULADO';?>" class="form-control"  readonly>
+                           <i class="fa fa-circle"></i></div>
+
+                            <select name="ped_estado" id="ped_estado" class="form-control">
+                                <option value="1" <?php if($row_mos_registro['ped_estado'] == 1) { echo "SELECTED";}?>>EMITIDO</option>
+                                <option value="0" <?php if($row_mos_registro['ped_estado'] == 0) { echo "SELECTED";}?>>ANULADO</option>
+                            </select>
+           <!-- <input type="text" id="estado" name="estado" value="<?php echo $row_mos_registro['ped_estado']==1 ? 'EMITIDO': 'ANULADO';?>" class="form-control"  readonly>-->
                          </div>
                     </div> 
                  </div>          
