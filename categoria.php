@@ -268,7 +268,7 @@ $insertSQL = sprintf("INSERT INTO call_registro (reg_fecha, est_id, usu_id, reg_
 	if (isset($_POST['cur_id'])) {
 	  $colname_mos_msjexcurso = $_POST['cur_id'];
 	}
-	mysql_select_db($database_conexion, $conexion);
+/*	mysql_select_db($database_conexion, $conexion);
 	$query_mos_msjexcurso = sprintf("SELECT * FROM call_curso WHERE cur_id = %s", GetSQLValueString($colname_mos_msjexcurso, "int"));
 	$mos_msjexcurso = mysql_query($query_mos_msjexcurso, $conexion) or die(mysql_error());
 	$row_mos_msjexcurso = mysql_fetch_assoc($mos_msjexcurso);
@@ -320,7 +320,7 @@ $content="<table width=614 height=584 border=0 align=center cellpadding=0 cellsp
       
       } else {
       
-      }
+      }*/
   //
   $m = 'Registrado Correctamente';
   //
@@ -611,8 +611,8 @@ if (isset($_GET['n']))
         <td><strong>Fecha</strong></td>
         <td align="center"><strong>E</strong></td>
         <td><strong>Código</strong></td>
-        <td><strong>Nombre del Postulante</strong></td>
-        <td><strong>Curso</strong></td>
+        <td><strong>Cliente</strong></td>
+        <td><strong>Producto</strong></td>
         <!--<td>Email</td>-->
         <td><strong>Telefono</strong></td>
         <td><strong>Nombre del Asesor</strong></td>
