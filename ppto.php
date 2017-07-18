@@ -309,7 +309,7 @@ if (isset($_GET['n']))
                       <div class="col-sm-6">
                           <a class="btn btn-primary" href="ppto_new.php"><i class="fa fa-pencil"></i> Agregar</a>
             </div>
-                    <div class="col-sm-6 search-form">
+                   <!-- <div class="col-sm-6 search-form">
                             <form name="formb" id="formb" action="" method="post" class="text-right">
                                   <div class="input-group">                                          
                                      <input type="text" name="buscar" class="form-control" placeholder="Buscar ...">
@@ -318,7 +318,7 @@ if (isset($_GET['n']))
                                  </div>
                         </div>                                                     
                         </form>
-                        </div>
+                        </div>-->
                    </div>     
 
                        <div class="box-body table-responsive no-padding">
