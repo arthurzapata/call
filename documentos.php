@@ -132,7 +132,7 @@ $startRow_mos_curso = $pageNum_mos_curso * $maxRows_mos_curso;
 
 mysql_select_db($database_conexion, $conexion);
 $query_mos_curso = "SELECT cn_serie,cn_numero,tipo_doc,nro_pedido,c.nro_doc,c.razon_social,cc_vta,cc_moneda,d.fecha_reg,u.usu_nombre, total,fecha_ped,estado FROM documento d left join cliente c on d.cc_cliente =c.cli_id 
-left join call_usuario u on d.cc_vendedor = u.usu_id order by d.fecha_reg desc";
+left join call_usuario u on d.cc_vendedor = u.usu_id order by cn_numero desc";
 $query_limit_mos_curso = sprintf("%s LIMIT %d, %d", $query_mos_curso, $startRow_mos_curso, $maxRows_mos_curso);
 $mos_curso = mysql_query($query_limit_mos_curso, $conexion) or die(mysql_error());
 $row_mos_curso = mysql_fetch_assoc($mos_curso);

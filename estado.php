@@ -148,7 +148,7 @@ if (isset($_GET['pageNum_mos_user'])) {
 $startRow_mos_user = $pageNum_mos_user * $maxRows_mos_user;
 
 mysql_select_db($database_conexion, $conexion);
-$query_mos_user = "SELECT * FROM call_estado";
+$query_mos_user = "SELECT * FROM call_estado order by est_id desc";
 $query_limit_mos_user = sprintf("%s LIMIT %d, %d", $query_mos_user, $startRow_mos_user, $maxRows_mos_user);
 $mos_user = mysql_query($query_limit_mos_user, $conexion) or die(mysql_error());
 $row_mos_user = mysql_fetch_assoc($mos_user);

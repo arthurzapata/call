@@ -104,6 +104,8 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
 }
 }
 $msj ='';
+$currentPage = '';
+$queryString_mos_user='';
 //usuario logueado
 $colname_mos_usuario = "-1";
 if (isset($_SESSION['MM_Username'])) {
@@ -151,13 +153,13 @@ $startRow_mos_user = $pageNum_mos_user * $maxRows_mos_user;
 
 mysql_select_db($database_conexion, $conexion);
 if ($perid == 3)//owner
-$query_mos_user = "SELECT * FROM call_usuario u inner join call_perfil p on p.per_id = u.per_id inner join call_empresa e on u.emp_id = e.emp_id order by e.emp_nombre asc";
+$query_mos_user = "SELECT * FROM call_usuario u inner join call_perfil p on p.per_id = u.per_id inner join call_empresa e on u.emp_id = e.emp_id order by usu_id desc";
 elseif ($perid == 4) //admin
-  $query_mos_user = "SELECT * FROM call_usuario u inner join call_perfil p on p.per_id = u.per_id inner join call_empresa e on u.emp_id = e.emp_id where u.emp_id = ".$empid." and u.per_id not in (3,4) or u.usu_id=".$usuid."";
+  $query_mos_user = "SELECT * FROM call_usuario u inner join call_perfil p on p.per_id = u.per_id inner join call_empresa e on u.emp_id = e.emp_id where u.emp_id = ".$empid." and u.per_id not in (3,4) or u.usu_id=".$usuid." order by usu_id desc";
 elseif ($perid == 1) 
-  $query_mos_user = "SELECT * FROM call_usuario u inner join call_perfil p on p.per_id = u.per_id inner join call_empresa e on u.emp_id = e.emp_id where u.emp_id = ".$empid." and u.cor_id = ". $usuid."";
+  $query_mos_user = "SELECT * FROM call_usuario u inner join call_perfil p on p.per_id = u.per_id inner join call_empresa e on u.emp_id = e.emp_id where u.emp_id = ".$empid." and u.cor_id = ". $usuid." order by usu_id desc" ;
 else
-$query_mos_user = "SELECT * FROM call_usuario u inner join call_perfil p on p.per_id = u.per_id inner join call_empresa e on u.emp_id = e.emp_id where u.emp_id = ".$empid." and u.per_id not in (3)";
+$query_mos_user = "SELECT * FROM call_usuario u inner join call_perfil p on p.per_id = u.per_id inner join call_empresa e on u.emp_id = e.emp_id where u.emp_id = ".$empid." and u.per_id not in (3) order by usu_id desc";
 $query_limit_mos_user = sprintf("%s LIMIT %d, %d", $query_mos_user, $startRow_mos_user, $maxRows_mos_user);
 $mos_user = mysql_query($query_limit_mos_user, $conexion) or die(mysql_error());
 $row_mos_user = mysql_fetch_assoc($mos_user);

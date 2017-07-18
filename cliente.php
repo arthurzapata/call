@@ -148,7 +148,7 @@ if (isset($_GET['pageNum_mos_curso'])) {
 $startRow_mos_curso = $pageNum_mos_curso * $maxRows_mos_curso;
 
 mysql_select_db($database_conexion, $conexion);
-$query_mos_curso = "SELECT * FROM cliente";
+$query_mos_curso = "SELECT * FROM cliente order by cli_id desc";
 $query_limit_mos_curso = sprintf("%s LIMIT %d, %d", $query_mos_curso, $startRow_mos_curso, $maxRows_mos_curso);
 $mos_curso = mysql_query($query_limit_mos_curso, $conexion) or die(mysql_error());
 $row_mos_curso = mysql_fetch_assoc($mos_curso);
